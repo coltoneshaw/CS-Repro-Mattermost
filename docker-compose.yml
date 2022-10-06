@@ -1,0 +1,98 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: deep-dive-postgres
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - POSTGRES_DB=mattermost
+      - LISTEN_ADDRESS="*"
+    image: postgres:13-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U mmuser -d mattermost
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  openldap:
+    container_name: deep-dive-openldap
+    hostname: openldap
+    restart: unless-stopped
+    image: rroemhild/test-openldap:latest
+    ports:
+      - "10389:10389"
+      - "10636:10636"
+  prometheus:
+    container_name: deep-dive-prometheus
+    image: prom/prometheus:latest
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./files/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./volumes/prometheus:/prometheus
+  grafana:
+    container_name: deep-dive-grafana
+    image: grafana/grafana:7.5.7
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./files/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./files/grafana/provisioning:/etc/grafana/provisioning
+      - ./volumes/grafana:/var/lib/grafana
+  mattermost:
+    container_name: deep-dive-mattermost
+    env_file:
+      - deep-dive.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: mattermost/mattermost-enterprise-edition:release-7.2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    read_only: false
+    ports:
+      - "8065:8065"
+      - "8067:8067"
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./volumes/app/mattermost/config:/mattermost/config:rw
+      - ./volumes/app/mattermost/data:/mattermost/data:rw
+      - ./volumes/app/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/app/mattermost/client/plugins:/mattermost/client/plugins:rw
+      - ./volumes/app/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+      - ./enterprise.txt:/mattermost/config/license.mattermost-enterprise:ro
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./volumes/keycloak:/opt/keycloak/data:rw
+    environment:
+      - PROXY_ADDRESS_FORWARDING="true"
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      # - KEYCLOAK_URL=http://localhost:8080/auth
+    ports:
+      - 8080:8080
+    command:
+      - start-dev

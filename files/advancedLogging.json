@@ -1,0 +1,40 @@
+{
+  "console-log": {
+          "Type": "console",
+          "Format": "json",
+          "Levels": [
+            {"ID": 10, "Name": "stdlog", "Stacktrace": false},
+                  {"ID": 5, "Name": "debug", "Stacktrace": false},
+                  {"ID": 4, "Name": "info", "Stacktrace": false, "color": 36},
+                  {"ID": 3, "Name": "warn", "Stacktrace": false, "color": 33},
+                  {"ID": 2, "Name": "error", "Stacktrace": true, "color": 31},
+                  {"ID": 1, "Name": "fatal", "Stacktrace": true},
+                  {"ID": 0, "Name": "panic", "Stacktrace": true}
+          ],
+          "Options": {
+                  "Out": "stdout"
+          },
+          "MaxQueueSize": 1000
+  },
+  "file-log": {
+          "Type": "file",
+          "Format": "json",
+          "Levels": [
+                  {"ID": 10, "Name": "stdlog", "Stacktrace": false},
+                  {"ID": 5, "Name": "debug", "Stacktrace": false},
+                  {"ID": 4, "Name": "info", "Stacktrace": false},
+                  {"ID": 3, "Name": "warn", "Stacktrace": false},
+                  {"ID": 2, "Name": "error", "Stacktrace": true},
+                  {"ID": 1, "Name": "fatal", "Stacktrace": true},
+                  {"ID": 0, "Name": "panic", "Stacktrace": true}
+          ],
+          "Options": {
+                  "Compress": true,
+                  "Filename": "traceLogs.json",
+                  "MaxAgeDays": 15,
+                  "MaxBackups": 3,
+                  "MaxSizeMB": 100
+          },
+          "MaxQueueSize": 1000
+  }
+}

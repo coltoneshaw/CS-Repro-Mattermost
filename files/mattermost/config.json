@@ -134,7 +134,7 @@
     },
     "SqlSettings": {
         "DriverName": "postgres",
-        "DataSource": "postgres://mmuser:mmuser_password@cs-mattermost-postgres:5432/mattermost?sslmode=disable\u0026connect_timeout=10\u0026binary_parameters=yes",
+        "DataSource": "postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable\u0026connect_timeout=10\u0026binary_parameters=yes",
         "DataSourceReplicas": [],
         "DataSourceSearchReplicas": [],
         "MaxIdleConns": 20,
@@ -347,7 +347,7 @@
         "BaseDN": "dc=planetexpress,dc=com",
         "BindUsername": "cn=admin,dc=planetexpress,dc=com",
         "BindPassword": "GoodNewsEveryone",
-        "UserFilter": "(objectClass=inetOrgPerson)",
+        "UserFilter": "(objectClass=banana)",
         "GroupFilter": "(objectClass=Group)",
         "GuestFilter": "",
         "EnableAdminFilter": true,
@@ -388,8 +388,8 @@
     },
     "SamlSettings": {
         "Enable": true,
-        "EnableSyncWithLdap": false,
-        "EnableSyncWithLdapIncludeAuth": false,
+        "EnableSyncWithLdap": true,
+        "EnableSyncWithLdapIncludeAuth": true,
         "IgnoreGuestsLdapSync": false,
         "Verify": false,
         "Encrypt": false,
@@ -467,10 +467,10 @@
         "MaxUsersForStatistics": 2500
     },
     "ElasticsearchSettings": {
-        "ConnectionURL": "http://localhost:9200",
+        "ConnectionURL": "http://cs-repro-elasticsearch:9200",
         "Username": "elastic",
         "Password": "changeme",
-        "EnableIndexing": false,
+        "EnableIndexing": true,
         "EnableSearching": false,
         "EnableAutocomplete": false,
         "Sniff": true,
@@ -539,7 +539,7 @@
         "ClientDirectory": "./client/plugins",
         "Plugins": {
             "playbooks": {
-                "BotUserID": "rn8xj3rnwtnffjfu14uff6imyh"
+                "BotUserID": "kkx51t3yytrabj9dfjtzyaazdw"
             }
         },
         "PluginStates": {

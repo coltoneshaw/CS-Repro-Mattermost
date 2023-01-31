@@ -87,6 +87,7 @@ services:
       # - ./certs/mattermost.crt:/mattermost/config/mattermost.crt:rW
   keycloak:
     container_name: cs-repro-keycloak
+    restart: unless-stopped
     platform: linux/amd64
     image: keycloak/keycloak:18.0.0
     volumes:
@@ -99,3 +100,21 @@ services:
       - 8080:8080
     command:
       - start-dev
+  elasticsearch:
+    image: elasticsearch:8.4.2
+    container_name: cs-repro-elasticsearch
+    restart: unless-stopped
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./volumes/elastic:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300

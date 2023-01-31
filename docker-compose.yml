@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   postgres:
-    container_name: deep-dive-postgres
+    container_name: cs-repro-postgres
     environment:
       - POSTGRES_USER=mmuser
       - POSTGRES_PASSWORD=mmuser_password
@@ -27,7 +27,7 @@ services:
       timeout: 3s
       retries: 3
   openldap:
-    container_name: deep-dive-openldap
+    container_name: cs-repro-openldap
     hostname: openldap
     restart: unless-stopped
     image: rroemhild/test-openldap:latest
@@ -35,16 +35,16 @@ services:
       - "10389:10389"
       - "10636:10636"
   prometheus:
-    container_name: deep-dive-prometheus
+    container_name: cs-repro-prometheus
     image: prom/prometheus:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - 9090:9090
     volumes:
       - ./files/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./volumes/prometheus:/prometheus
   grafana:
-    container_name: deep-dive-grafana
+    container_name: cs-repro-grafana
     image: grafana/grafana:7.5.7
     ports:
       - 3000:3000
@@ -58,13 +58,12 @@ services:
       - ./files/grafana/provisioning:/etc/grafana/provisioning
       - ./volumes/grafana:/var/lib/grafana
   mattermost:
-    container_name: deep-dive-mattermost
-    env_file:
-      - deep-dive.env
+    platform: linux/amd64
+    container_name: cs-repro-mattermost
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-7.2
+    image: mattermost/mattermost-enterprise-edition:release-7.5
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -76,22 +75,26 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ./volumes/app/mattermost/config:/mattermost/config:rw
-      - ./volumes/app/mattermost/data:/mattermost/data:rw
-      - ./volumes/app/mattermost/logs:/mattermost/logs:rw
-      - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
-      - ./volumes/app/mattermost/client/plugins:/mattermost/client/plugins:rw
-      - ./volumes/app/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+      - ./volumes/mattermost/config:/mattermost/config:rw
+      - ./volumes/mattermost/data:/mattermost/data:rw
+      - ./volumes/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
+      - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
       - ./enterprise.txt:/mattermost/config/license.mattermost-enterprise:ro
+      - ./files/mattermost/config.json:/mattermost/config/config.json
+      - ./files/mattermost/samlCert.crt:/mattermost/config/samlCert.crt
+      # - ./certs/mattermost.crt:/mattermost/config/mattermost.crt:rW
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    container_name: cs-repro-keycloak
+    platform: linux/amd64
+    image: keycloak/keycloak:18.0.0
     volumes:
       - ./volumes/keycloak:/opt/keycloak/data:rw
     environment:
       - PROXY_ADDRESS_FORWARDING="true"
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      # - KEYCLOAK_URL=http://localhost:8080/auth
     ports:
       - 8080:8080
     command:

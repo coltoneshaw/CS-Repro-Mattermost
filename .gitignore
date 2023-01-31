@@ -1,3 +1,6 @@
 enterprise.txt
 
+
+## Ignoring keycloak so it can be pulled already setup.
+!volumes/keycloak/*
 volumes

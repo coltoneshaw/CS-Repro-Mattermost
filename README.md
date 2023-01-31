@@ -1,38 +1,46 @@
 # README
 
-This is a docker compose file that contains a working Mattermost with an LDAP server. The LDAP image comes from [rroemhild/docker-test-openldap](https://github.com/rroemhild/docker-test-openldap).
+This is a basic reproduction that includes various components preconfigured like SAML, LDAP, advanced logging, prometheus, grafana, and elasticsearch.
 
-To start this docker file run the below from the root repo directory
+## Making Changes
 
-
-
-You can access mattermost via `localhost:8065`.
+If you're testing changes with Mattermost I do not suggest running `docker compose restart` or `docker compose down / up` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `docker down mattermost`. Additionally, the keycloak container can take up to 5 minutes to spin up. If it's taking a while with no logs output, just restart the keycloak container **only**.
 
 ## Getting Started
 
 1. Add an enterprise license to this folder with the name `license.txt`
+  note: If you ignore this set Mattermost will not spin up.
 
 2. Start the docker containers. This may take a second to download everything. 
 
-```
-docker-compose up -d
-```
+  If you don't want to watch the logs use the below:
+  ```
+  docker-compose up -d
+  // OR
+  docker compose up -d // for docker desktop
+  ```
 
-3. You can log access Mattermost at `localhost:8065`
+  If you want to watch the logs start up with
 
+  ```bash
+  docker-compose up
+  // OR
+  docker compose up // for docker desktop
+  ```
 
-## Things to break
+3. Sign into Mattermost
+  - You can use any of the accounts to sign in.
+  - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
 
-- User left an ldap synced team of their own accord
-- new email address, can't sign in
-- ID attributes don't match.
+## Accounts
 
-
-
-## Make key
-
-```bash
-
-openssl req -x509 -newkey rsa:4096 -keyout myKey.pem -out cert.pem -days 365 -nodes
-openssl pkcs12 -export -out keyStore.p12 -inkey myKey.pem -in cert.pem
-```
+| Username  | Password  | Keycloak Role | Mattermost Role | Can use LDAP? | Can use SAML? |
+|-----------|-----------|---------------|-----------------|---------------|---------------|
+| admin     | admin     | Admin         | n/a             | n/a           | n/a           |
+| professor | professor | User          | Sys Admin       | Yes           | Yes           |
+| bender    | bender    | User          | Member          | Yes           | Yes           |
+| hermes    | hermes    | User          | Sys Admin       | Yes           | Yes           |
+| fry       | fry       | User          | Member          | Yes           | Yes           |
+| leela     | leela     | User          | Member          | Yes           | Yes           |
+| zoidberg  | zoidberg  | User          | Member          | Yes           | Yes           |
+| amy       | amy       | User          | Member          | Yes           | Yes           |

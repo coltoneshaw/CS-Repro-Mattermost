@@ -63,7 +63,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-7.5
+    image: mattermost/mattermost-enterprise-edition:release-7.7
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -81,10 +81,17 @@ services:
       - ./volumes/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
-      - ./enterprise.txt:/mattermost/config/license.mattermost-enterprise:ro
-      - ./files/mattermost/config.json:/mattermost/config/config.json
+      - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
       - ./files/mattermost/samlCert.crt:/mattermost/config/samlCert.crt
-      # - ./certs/mattermost.crt:/mattermost/config/mattermost.crt:rW
+      - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json
+    environment:
+      - MM_SqlSettings_DriverName=postgres
+      - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+      - MM_ServiceSettings_EnableLocalMode=true
+      - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
+      - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+    # command:
+    #   - mmctl config patch /mattermost/config/defaultConfig.json --local
   keycloak:
     container_name: cs-repro-keycloak
     restart: unless-stopped

@@ -1,6 +1,7 @@
-enterprise.txt
+license.mattermost
 
 
 ## Ignoring keycloak so it can be pulled already setup.
-!volumes/keycloak/*
 volumes
+
+.DS_Store

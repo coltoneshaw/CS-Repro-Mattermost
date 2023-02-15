@@ -89,7 +89,7 @@
         "EnableSVGs": true,
         "EnableLatex": true,
         "EnableInlineLatex": true,
-        "PostPriority": false,
+        "PostPriority": true,
         "EnableAPIChannelDeletion": false,
         "EnableLocalMode": true,
         "LocalModeSocketLocation": "/var/tmp/mattermost_local.socket",
@@ -100,12 +100,14 @@
         "ThreadAutoFollow": true,
         "CollapsedThreads": "always_on",
         "ManagedResourcePaths": "",
-        "EnableCustomGroups": true
+        "EnableCustomGroups": true,
+        "SelfHostedPurchase": true,
+        "AllowSyncedDrafts": true
     },
     "TeamSettings": {
         "SiteName": "Mattermost",
         "MaxUsersPerTeam": 50,
-        "EnableUserCreation": true,
+        "EnableUserCreation": false,
         "EnableOpenServer": false,
         "EnableUserDeactivation": false,
         "RestrictCreationToDomains": "",
@@ -119,7 +121,7 @@
         "MaxChannelsPerTeam": 2000,
         "MaxNotificationsPerChannel": 1000,
         "EnableConfirmNotificationsToChannel": true,
-        "TeammateNameDisplay": "username",
+        "TeammateNameDisplay": "full_name",
         "ExperimentalViewArchivedChannels": true,
         "ExperimentalEnableAutomaticReplies": false,
         "LockTeammateNameDisplay": false,
@@ -142,7 +144,7 @@
         "ConnMaxIdleTimeMilliseconds": 300000,
         "MaxOpenConns": 300,
         "Trace": false,
-        "AtRestEncryptKey": "d44qwusbidpssy13zw6cr9idp43mgw5w",
+        "AtRestEncryptKey": "c6j9z5bzbsargtkk17fxcjuyw7yetkdd",
         "QueryTimeout": 30,
         "DisableDatabaseSearch": false,
         "MigrationsStatementTimeoutSeconds": 100000,
@@ -154,11 +156,12 @@
         "ConsoleJson": true,
         "EnableColor": false,
         "EnableFile": true,
-        "FileLevel": "INFO",
+        "FileLevel": "DEBUG",
         "FileJson": true,
         "FileLocation": "",
         "EnableWebhookDebugging": true,
         "EnableDiagnostics": true,
+        "VerboseDiagnostics": false,
         "EnableSentry": true,
         "AdvancedLoggingConfig": ""
     },
@@ -202,7 +205,7 @@
         "EnablePublicLink": false,
         "ExtractContent": true,
         "ArchiveRecursion": false,
-        "PublicLinkSalt": "o57y33mz89b5jjxibuyxyjds6s8tcxxd",
+        "PublicLinkSalt": "5dt8nrqjspnjikmb7yaz9kwesanaqcf5",
         "InitialFont": "nunito-bold.ttf",
         "AmazonS3AccessKeyId": "",
         "AmazonS3SecretAccessKey": "",
@@ -217,8 +220,8 @@
         "AmazonS3RequestTimeoutMilliseconds": 30000
     },
     "EmailSettings": {
-        "EnableSignUpWithEmail": true,
-        "EnableSignInWithEmail": true,
+        "EnableSignUpWithEmail": false,
+        "EnableSignInWithEmail": false,
         "EnableSignInWithUsername": true,
         "SendEmailNotifications": true,
         "UseChannelInEmailNotifications": false,
@@ -347,13 +350,13 @@
         "BaseDN": "dc=planetexpress,dc=com",
         "BindUsername": "cn=admin,dc=planetexpress,dc=com",
         "BindPassword": "GoodNewsEveryone",
-        "UserFilter": "(objectClass=banana)",
+        "UserFilter": "(objectClass=Person)",
         "GroupFilter": "(objectClass=Group)",
         "GuestFilter": "",
-        "EnableAdminFilter": true,
+        "EnableAdminFilter": false,
         "AdminFilter": "(memberof=cn=admin_staff,ou=people,dc=planetexpress,dc=com)",
         "GroupDisplayNameAttribute": "cn",
-        "GroupIdAttribute": "dn",
+        "GroupIdAttribute": "cn",
         "FirstNameAttribute": "givenName",
         "LastNameAttribute": "sn",
         "EmailAttribute": "mail",
@@ -449,7 +452,7 @@
         "IdleConnTimeoutMilliseconds": 90000
     },
     "MetricsSettings": {
-        "Enable": false,
+        "Enable": true,
         "BlockProfileRate": 0,
         "ListenAddress": ":8067"
     },
@@ -461,7 +464,8 @@
         "UseNewSAMLLibrary": false,
         "EnableSharedChannels": false,
         "EnableRemoteClusterService": false,
-        "EnableAppBar": false
+        "EnableAppBar": false,
+        "PatchPluginsReactDOM": false
     },
     "AnalyticsSettings": {
         "MaxUsersForStatistics": 2500
@@ -471,8 +475,8 @@
         "Username": "elastic",
         "Password": "changeme",
         "EnableIndexing": true,
-        "EnableSearching": false,
-        "EnableAutocomplete": false,
+        "EnableSearching": true,
+        "EnableAutocomplete": true,
         "Sniff": true,
         "PostIndexReplicas": 1,
         "PostIndexShards": 1,
@@ -532,14 +536,14 @@
     },
     "PluginSettings": {
         "Enable": true,
-        "EnableUploads": false,
+        "EnableUploads": true,
         "AllowInsecureDownloadURL": false,
         "EnableHealthCheck": true,
         "Directory": "./plugins",
         "ClientDirectory": "./client/plugins",
         "Plugins": {
             "playbooks": {
-                "BotUserID": "kkx51t3yytrabj9dfjtzyaazdw"
+                "BotUserID": "qy9ge6fgcjf35yc5ugb93r65fh"
             }
         },
         "PluginStates": {
@@ -575,7 +579,7 @@
         "ExperimentalTimezone": true
     },
     "GuestAccountsSettings": {
-        "Enable": false,
+        "Enable": true,
         "AllowEmailAccounts": true,
         "EnforceMultifactorAuthentication": false,
         "RestrictCreationToDomains": ""

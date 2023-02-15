@@ -4,33 +4,60 @@ This is a basic reproduction that includes various components preconfigured like
 
 ## Making Changes
 
-If you're testing changes with Mattermost I do not suggest running `docker compose restart` or `docker compose down / up` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `docker down mattermost`. Additionally, the keycloak container can take up to 5 minutes to spin up. If it's taking a while with no logs output, just restart the keycloak container **only**.
+If you're testing changes with Mattermost I do not suggest running `make restart` or `make stop` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `make restart-mattermost`. 
+
+Additionally, the keycloak container can take up to 5 minutes to spin up. If it's taking a while with no logs output, just restart the keycloak container **only**.
 
 ## Getting Started
 
-1. Add an enterprise license to this folder with the name `license.txt`
+1. Add an enterprise license to this folder with the name `license.mattermost`
   note: If you ignore this set Mattermost will not spin up.
 
 2. Start the docker containers. This may take a second to download everything. 
 
-  If you don't want to watch the logs use the below:
-  ```
-  docker-compose up -d
-  // OR
-  docker compose up -d // for docker desktop
-  ```
+  You'll be prompted on setting up the test data.
 
-  If you want to watch the logs start up with
-
-  ```bash
-  docker-compose up
-  // OR
-  docker compose up // for docker desktop
+  ```
+  make start
   ```
 
 3. Sign into Mattermost
   - You can use any of the accounts to sign in.
   - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
+
+## Commands
+
+### `make backup-keycloak`
+
+This takes your exiting keycloak setup and backs it up in the files directory. You most likely don't need this frequently.
+
+### `make restore-keycloak`
+
+If you made changes to keycloak, this will copy over the keycloak data. You'll want to delete the `./volumes/keycloak` first.
+
+### `make stop`
+
+Simply stops the running contains
+
+### `make restart`
+
+Simply restarts the docker containers.
+
+### `make restart-mattermost`
+
+Restarts only the Mattermost containers.
+
+### `make reset`
+
+This deletes the volumes directory and starts everything again. Easiest way to get to get the environment back the default.
+
+### `make delete-data`
+
+This clears all data from the volumes and stops Mattermost.
+
+### `make nuke`
+
+Destroys everything (Except your life). 
 
 ## Accounts
 

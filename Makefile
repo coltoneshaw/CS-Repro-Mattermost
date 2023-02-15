@@ -1,12 +1,9 @@
 .PHONY: stop start check_mattermost
 	
-docker_follow_logs:
+logs:
 	@echo "Following logs..."
-	@docker compose logs --follow
+	@docker-compose logs --follow
 	@echo "Done"
-
-
-check_mattermost:
 
 setup-mattermost:
 	@./scripts/mattermost.sh setup
@@ -20,16 +17,19 @@ restore-keycloak:
 start: 
 	@echo "Starting..."
 	@make restore-keycloak
-	@docker compose up -d
+	@docker-compose up -d
 	@make setup-mattermost
 	
 stop:
 	@echo "Stopping..."
-	@docker compose down
+	@docker-compose down
 	@echo "Done"
 
 restart:
-	@docker compose restart
+	@docker-compose restart
+
+restart-mattermost:
+	@docker-compose restart cs-repro-mattermost
 
 reset:
 	@echo "Resetting..."
@@ -38,7 +38,7 @@ reset:
 
 delete-dockerfiles:
 	@echo "Deleting data..."
-	@docker compose rm
+	@docker-compose rm
 	@rm -rf ./volumes
 	@echo "Done"
 
@@ -46,6 +46,6 @@ delete-data: stop delete-dockerfiles
 
 nuke: 
 	@echo "Nuking Docker..."
-	@docker compose down --rmi all --volumes --remove-orphans
+	@docker-compose down --rmi all --volumes --remove-orphans
 	@make delete-data
 

@@ -65,20 +65,28 @@ echoLogins() {
   echo
   echo ========================================================================
   echo
-  echo Logins:
+  echo "Mattermost logins:"
   echo
-  echo - System admin: username=sysadmin password=Testpassword123!
-  echo - Regular account: username=user-1 password=Testpassword123!
-  echo - LDAP or SAML account: username=professor password=professor
+  echo "- System admin"
+  echo "     - username: sysadmin"
+  echo "     - password: Testpassword123!"
+  echo "- Regular account:"
+  echo "     - username: user-1"
+  echo "     - password: Testpassword123!"
+  echo "- LDAP or SAML account:"
+  echo "     - username: professor"
+  echo "     - password: professor"
+  echo
+  echo "For more logins check out https://github.com/coltoneshaw/CS-Repro-Mattermost#accounts"
   echo
   echo ========================================================================
 }
 
-upgrade () {
+upgrade() {
   sed -i "s#7.7#7.8#g" docker-compose.yml
   sed -i 's/release-.*/release-6.88/' docker-compose.yml
 
-      sed -i '/release-.*/release-6.88/' ${PWD}/docker-compose.yml
+  sed -i '/release-.*/release-6.88/' ${PWD}/docker-compose.yml
 
 }
 

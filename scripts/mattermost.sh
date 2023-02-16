@@ -74,4 +74,12 @@ echoLogins() {
   echo ========================================================================
 }
 
+upgrade () {
+  sed -i "s#7.7#7.8#g" docker-compose.yml
+  sed -i 's/release-.*/release-6.88/' docker-compose.yml
+
+      sed -i '/release-.*/release-6.88/' ${PWD}/docker-compose.yml
+
+}
+
 "$@"

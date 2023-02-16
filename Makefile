@@ -8,17 +8,24 @@ logs:
 setup-mattermost:
 	@./scripts/mattermost.sh setup
 
+check-mattermost:
+	@./scripts/mattermost.sh waitForStart
+
 backup-keycloak:
 	@./scripts/keycloak.sh backup
 
 restore-keycloak:
 	@./scripts/keycloak.sh restore
 
+echo-logins:
+	@./scripts/general.sh logins
+
 start: 
 	@echo "Starting..."
 	@make restore-keycloak
 	@docker-compose up -d
 	@make setup-mattermost
+	@make echo-logins
 	
 stop:
 	@echo "Stopping..."
@@ -27,9 +34,11 @@ stop:
 
 restart:
 	@docker-compose restart
+	@make check-mattermost
 
 restart-mattermost:
 	@docker restart cs-repro-mattermost
+	@make check-mattermost
 
 reset:
 	@echo "Resetting..."

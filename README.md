@@ -103,3 +103,12 @@ Doing this will wipe anything you have in the database and any existing Mattermo
   - delete the database
   - Restart the database container
   - Restart the Mattermost container
+
+## Use Grafana
+
+All the Mattermost grafana charts are already installed and linked, you just have to access them. 
+
+1. Go to `localhost:3000`
+2. Sign in with `admin` / `admin`. Change the password if you want, I don't suggest it.
+3. Click `Dashboards` > `Manage`
+4. Click any of the dashboards you want to view. 

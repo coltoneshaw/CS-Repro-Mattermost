@@ -29,7 +29,7 @@ restart:
 	@docker-compose restart
 
 restart-mattermost:
-	@docker-compose restart cs-repro-mattermost
+	@docker restart cs-repro-mattermost
 
 reset:
 	@echo "Resetting..."

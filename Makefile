@@ -36,6 +36,15 @@ reset:
 	@make delete-data
 	@make start
 
+downgrade:
+	@echo "Downgrading Mattermost..."
+	@docker stop cs-repro-mattermost || true && docker rm cs-repro-mattermost || true
+	@docker stop cs-repro-postgres || true && docker rm cs-repro-postgres || true
+	rm -rf ./volumes/mattermost
+	rm -rf ./volumes/db
+	docker-compose up -d
+	@make setup-mattermost
+
 delete-dockerfiles:
 	@echo "Deleting data..."
 	@docker-compose rm

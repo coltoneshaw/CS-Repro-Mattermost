@@ -1,5 +1,5 @@
 license.mattermost
-
+license.txt
 
 ## Ignoring keycloak so it can be pulled already setup.
 volumes

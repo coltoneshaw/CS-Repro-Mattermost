@@ -71,3 +71,35 @@ Destroys everything (Except your life).
 | leela     | leela     | User          | Member          | Yes           | Yes           |
 | zoidberg  | zoidberg  | User          | Member          | Yes           | Yes           |
 | amy       | amy       | User          | Member          | Yes           | Yes           |
+
+# Guides
+
+## How to upgrade
+
+1. Modify the line in the `docker-compose.yml` file to be the version you want
+
+  You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+
+  ```
+  mattermost/mattermost-enterprise-edition:release-7.7
+  ```
+2. Run `make restart-mattermost`
+  This will bounce the Mattermost container only.
+
+## How to upgrade
+
+Doing this will wipe anything you have in the database and any existing Mattermost config. If you desire to manually downgrade, follow the upgrade steps but in reverse. Note you might have some issues with the patch config and such.
+
+1. Modify the line in the `docker-compose.yml` file to be the version you want
+
+  You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+
+  ```
+  mattermost/mattermost-enterprise-edition:release-7.7
+  ```
+  
+2. Run `make downgrade`
+  This will:
+  - delete the database
+  - Restart the database container
+  - Restart the Mattermost container

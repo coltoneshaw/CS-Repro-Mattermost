@@ -63,7 +63,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-7.7
+    image: mattermost/mattermost-enterprise-edition:release-7.8
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

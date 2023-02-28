@@ -47,7 +47,7 @@
       "BaseDN": "dc=planetexpress,dc=com",
       "BindUsername": "cn=admin,dc=planetexpress,dc=com",
       "BindPassword": "GoodNewsEveryone",
-      "UserFilter": "(objectClass=banana)",
+      "UserFilter": "(objectClass=Person)",
       "GroupFilter": "(objectClass=Group)",
       "GuestFilter": "",
       "EnableAdminFilter": true,

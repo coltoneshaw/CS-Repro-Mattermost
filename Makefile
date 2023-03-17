@@ -29,7 +29,7 @@ start:
 	
 stop:
 	@echo "Stopping..."
-	@docker-compose down
+	@docker-compose stop
 	@echo "Done"
 
 restart:

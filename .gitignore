@@ -4,4 +4,4 @@ license.txt
 ## Ignoring keycloak so it can be pulled already setup.
 volumes
 
-.DS_Store
+**/.DS_Store

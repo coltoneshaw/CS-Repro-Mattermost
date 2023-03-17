@@ -3,7 +3,7 @@
 logins () {
   echo ===========================================================
   echo
-  echo "- Mattermost: http://localhost:8065" with the logins above
+  echo "- Mattermost: http://localhost:8065" with the logins above if you ran setup
   echo "- Keycloak: http://localhost:8080" with 'admin' / 'admin'
   echo "- Grafana: http://localhost:3000" with 'admin' / 'admin'
   echo "    - All Mattermost Grafana charts are setup."

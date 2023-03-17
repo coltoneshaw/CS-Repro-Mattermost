@@ -15,7 +15,7 @@ setup() {
     echo "If you are curious about the config changes check out the file ./files/mattermost/defaultConfig.json"
     echo "If you don't want to do this, just press enter."
     echo
-    read -p "Y / N   " -n 1 -r
+    read -p "y / N   " -n 1 -r
     echo # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       echo ===========================================================
@@ -29,6 +29,9 @@ setup() {
       docker exec -it cs-repro-mattermost mmctl user create --password Testpassword123! --username user-1 --email user-1@example.com --local
 
       echoLogins
+      exit 0
+    else 
+      echo "skipping test Data setup for Mattermost"
       exit 0
     fi
   fi

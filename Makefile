@@ -37,7 +37,11 @@ restart:
 	@make check-mattermost
 
 restart-mattermost:
-	@docker restart cs-repro-mattermost
+	@echo "Stopping Mattermost container"
+	@docker stop cs-repro-mattermost
+	@wait
+	@echo "Starting Mattermost container"
+	@docker start cs-repro-mattermost
 	@make check-mattermost
 
 reset:

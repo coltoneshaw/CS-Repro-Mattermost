@@ -17,11 +17,12 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 
   You'll be prompted on setting up the test data.
 
-  ```
+  ```make
   make start
   ```
 
 3. Sign into Mattermost
+
   - You can use any of the accounts to sign in.
   - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
 
@@ -72,21 +73,23 @@ Destroys everything (Except your life).
 | zoidberg  | zoidberg  | User          | Member          | Yes           | Yes           |
 | amy       | amy       | User          | Member          | Yes           | Yes           |
 
-# Guides
+## Guides
 
-## How to upgrade
+### How to upgrade
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
   You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
-  ```
+  ```bash
   mattermost/mattermost-enterprise-edition:release-7.7
   ```
+
 2. Run `make restart-mattermost`
+
   This will bounce the Mattermost container only.
 
-## How to upgrade
+### How to Downgrade
 
 Doing this will wipe anything you have in the database and any existing Mattermost config. If you desire to manually downgrade, follow the upgrade steps but in reverse. Note you might have some issues with the patch config and such.
 
@@ -94,12 +97,14 @@ Doing this will wipe anything you have in the database and any existing Mattermo
 
   You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
-  ```
+  ```bash
   mattermost/mattermost-enterprise-edition:release-7.7
   ```
   
 2. Run `make downgrade`
+
   This will:
+
   - delete the database
   - Restart the database container
   - Restart the Mattermost container

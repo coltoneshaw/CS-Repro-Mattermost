@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   postgres:
@@ -96,7 +96,7 @@ services:
     container_name: cs-repro-keycloak
     restart: unless-stopped
     platform: linux/amd64
-    image: keycloak/keycloak:18.0.0
+    image: quay.io/keycloak/keycloak:18.0.0
     volumes:
       - ./volumes/keycloak:/opt/keycloak/data:rw
     environment:

@@ -30,7 +30,7 @@
           ],
           "Options": {
                   "Compress": true,
-                  "Filename": "traceLogs.json",
+                  "Filename": "./logs/traceLogs.json",
                   "MaxAgeDays": 15,
                   "MaxBackups": 3,
                   "MaxSizeMB": 100

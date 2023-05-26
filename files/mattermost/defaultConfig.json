@@ -15,7 +15,7 @@
       "EnableWebhookDebugging": true,
       "EnableDiagnostics": true,
       "EnableSentry": true,
-      "AdvancedLoggingConfig": ""
+      "AdvancedLoggingConfig": "./advancedLogging.json"
   },
   "ExperimentalAuditSettings": {
       "FileEnabled": false,
@@ -25,7 +25,7 @@
       "FileMaxBackups": 0,
       "FileCompress": false,
       "FileMaxQueueSize": 1000,
-      "AdvancedLoggingConfig": ""
+      "AdvancedLoggingConfig": "./advancedLogging.json"
   },
   "NotificationLogSettings": {
       "EnableConsole": true,
@@ -36,7 +36,7 @@
       "FileLevel": "INFO",
       "FileJson": true,
       "FileLocation": "",
-      "AdvancedLoggingConfig": ""
+      "AdvancedLoggingConfig": "./advancedLogging.json"
   },
   "LdapSettings": {
       "Enable": true,

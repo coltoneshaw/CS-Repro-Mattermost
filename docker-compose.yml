@@ -1,6 +1,31 @@
 version: "3.9"
 
 services:
+  # mysql:
+  #   container_name: cs-repro-mysql
+  #   image: mysql:8
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: "mattermost"
+  #     # So you don't have to use root, but you can if you like
+  #     MYSQL_USER: "mmuser"
+  #     # You can use whatever password you like
+  #     MYSQL_PASSWORD: "mmuser_password"
+  #     # Password for root access
+  #     MYSQL_ROOT_PASSWORD: "mmuser_password"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     timeout: 20s
+  #     retries: 10
+  #   ports:
+  #     # <Port exposed> : <MySQL Port running inside container>
+  #     - "3306:3306"
+  #   expose:
+  #     # Opens port 3306 on the container
+  #     - "3306"
+  #     # Where our data will be persisted
+  #   volumes:
+  #     - ./volumes/db/mysql:/var/lib/mysql
   postgres:
     container_name: cs-repro-postgres
     environment:
@@ -27,6 +52,7 @@ services:
       timeout: 3s
       retries: 3
   openldap:
+    platform: linux/amd64
     container_name: cs-repro-openldap
     hostname: openldap
     restart: unless-stopped
@@ -63,7 +89,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-7.8
+    image: mattermost/mattermost-enterprise-edition:release-7.9
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -83,10 +109,13 @@ services:
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
       - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
       - ./files/mattermost/samlCert.crt:/mattermost/config/samlCert.crt
-      - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json
+      - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
+      - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
     environment:
       - MM_SqlSettings_DriverName=postgres
       - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+      # - MM_SqlSettings_DriverName=mysql
+      # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
       - MM_ServiceSettings_EnableLocalMode=true
       - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
       - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise

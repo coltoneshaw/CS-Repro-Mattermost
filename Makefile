@@ -2,7 +2,7 @@
 	
 logs:
 	@echo "Following logs..."
-	@docker-compose logs --follow
+	@docker compose logs --follow
 	@echo "Done"
 
 setup-mattermost:
@@ -23,17 +23,17 @@ echo-logins:
 start: 
 	@echo "Starting..."
 	@make restore-keycloak
-	@docker-compose up -d
+	@docker compose up -d
 	@make setup-mattermost
 	@make echo-logins
 	
 stop:
 	@echo "Stopping..."
-	@docker-compose stop
+	@docker compose stop
 	@echo "Done"
 
 restart:
-	@docker-compose restart
+	@docker compose restart
 	@make check-mattermost
 
 restart-mattermost:
@@ -55,12 +55,12 @@ downgrade:
 	@docker stop cs-repro-postgres || true && docker rm cs-repro-postgres || true
 	rm -rf ./volumes/mattermost
 	rm -rf ./volumes/db
-	docker-compose up -d
+	docker compose up -d
 	@make setup-mattermost
 
 delete-dockerfiles:
 	@echo "Deleting data..."
-	@docker-compose rm
+	@docker compose rm
 	@rm -rf ./volumes
 	@echo "Done"
 
@@ -68,6 +68,11 @@ delete-data: stop delete-dockerfiles
 
 nuke: 
 	@echo "Nuking Docker..."
-	@docker-compose down --rmi all --volumes --remove-orphans
+	@docker compose down --volumes --remove-orphans
+	@make delete-data
+
+nuke-img: 
+	@echo "Nuking Docker along with all the images..."
+	# @docker compose down --rmi all --volumes --remove-orphans
 	@make delete-data
 

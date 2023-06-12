@@ -73,6 +73,6 @@ nuke:
 
 nuke-img: 
 	@echo "Nuking Docker along with all the images..."
-	# @docker compose down --rmi all --volumes --remove-orphans
+	@docker compose down --rmi all --volumes --remove-orphans
 	@make delete-data
 

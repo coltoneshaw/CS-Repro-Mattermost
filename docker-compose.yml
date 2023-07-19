@@ -89,7 +89,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-7.9
+    image: mattermost/mattermost-enterprise-edition:release-7.8
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -137,12 +137,13 @@ services:
     command:
       - start-dev
   elasticsearch:
-    image: elasticsearch:8.4.2
+    image: elasticsearch:7.17.10
     container_name: cs-repro-elasticsearch
     restart: unless-stopped
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
+      - logger.level=DEBUG
     ulimits:
       memlock:
         soft: -1

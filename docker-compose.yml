@@ -40,7 +40,7 @@ services:
     security_opt:
       - no-new-privileges:true
     pids_limit: 100
-    read_only: true
+    read_only: false
     tmpfs:
       - /tmp
       - /var/run/postgresql
@@ -51,6 +51,48 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+  # postgres-replica:
+  #   container_name: cs-repro-postgres-replica
+  #   environment:
+  #     - POSTGRES_USER=mmuser
+  #     - POSTGRES_PASSWORD=mmuser_password
+  #     # - POSTGRES_DB=mattermost
+  #     - LISTEN_ADDRESS="*"
+  #   image: postgres:13-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5433:5432"
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   pids_limit: 100
+  #   read_only: false
+  #   tmpfs:
+  #     - /tmp
+  #     - /var/run/postgresql
+  #   volumes:
+  #     # - ./volumes/db-replica/var/lib/postgresql/data:/var/lib/postgresql/data
+  #     - ./volumes/db-replica/data2:/var/lib/postgresql/data
+  # postgres-replica2:
+  #   container_name: cs-repro-postgres-replica2
+  #   environment:
+  #     - POSTGRES_USER=mmuser
+  #     - POSTGRES_PASSWORD=mmuser_password
+  #     # - POSTGRES_DB=mattermost
+  #     - LISTEN_ADDRESS="*"
+  #   image: postgres:13-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5434:5432"
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   pids_limit: 100
+  #   read_only: false
+  #   tmpfs:
+  #     - /tmp
+  #     - /var/run/postgresql
+  #   volumes:
+  #     # - ./volumes/db-replica2/var/lib/postgresql/data:/var/lib/postgresql/data
+  #     - ./volumes/db-replica2/data2:/var/lib/postgresql/data
   openldap:
     platform: linux/amd64
     container_name: cs-repro-openldap
@@ -71,7 +113,7 @@ services:
       - ./volumes/prometheus:/prometheus
   grafana:
     container_name: cs-repro-grafana
-    image: grafana/grafana:7.5.7
+    image: grafana/grafana:10.0.4
     ports:
       - 3000:3000
     restart: unless-stopped

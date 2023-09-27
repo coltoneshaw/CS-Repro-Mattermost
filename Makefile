@@ -68,6 +68,10 @@ delete-data: stop delete-dockerfiles
 
 nuke: 
 	@echo "Nuking Docker..."
-	@docker-compose down --rmi all --volumes --remove-orphans
+	@docker-compose down --volumes --remove-orphans
 	@make delete-data
 
+nuke-rmi: 
+	@echo "Nuking Docker with images..."
+	@docker-compose down --rmi all --volumes --remove-orphans
+	@make delete-data

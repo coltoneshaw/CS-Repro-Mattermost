@@ -60,6 +60,10 @@ This clears all data from the volumes and stops Mattermost.
 
 Destroys everything (Except your life). 
 
+### `make nuke-rmi`
+
+Destroys everything, and removes the docker images used. 
+
 ## Accounts
 
 | Username  | Password  | Keycloak Role | Mattermost Role | Can use LDAP? | Can use SAML? |

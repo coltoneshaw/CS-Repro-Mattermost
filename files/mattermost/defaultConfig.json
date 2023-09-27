@@ -53,7 +53,7 @@
       "EnableAdminFilter": true,
       "AdminFilter": "(memberof=cn=admin_staff,ou=people,dc=planetexpress,dc=com)",
       "GroupDisplayNameAttribute": "cn",
-      "GroupIdAttribute": "dn",
+      "GroupIdAttribute": "cn",
       "FirstNameAttribute": "givenName",
       "LastNameAttribute": "sn",
       "EmailAttribute": "mail",

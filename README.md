@@ -11,7 +11,7 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 ## Getting Started
 
 1. Add an enterprise license to this folder with the name `license.mattermost`
-  note: If you ignore this set Mattermost will not spin up.
+  note: If you ignore this step Mattermost will not spin up.
 
 2. Start the docker containers. This may take a second to download everything. 
 
@@ -30,7 +30,7 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 
 ### `make backup-keycloak`
 
-This takes your exiting keycloak setup and backs it up in the files directory. You most likely don't need this frequently.
+This takes your existing keycloak setup and backs it up in the files directory. You most likely don't need this frequently.
 
 ### `make restore-keycloak`
 
@@ -38,7 +38,7 @@ If you made changes to keycloak, this will copy over the keycloak data. You'll w
 
 ### `make stop`
 
-Simply stops the running contains
+Simply stops the running containers.
 
 ### `make restart`
 
@@ -50,7 +50,7 @@ Restarts only the Mattermost containers.
 
 ### `make reset`
 
-This deletes the volumes directory and starts everything again. Easiest way to get to get the environment back the default.
+This deletes the volumes directory and starts everything again. Easiest way to get the environment back the default.
 
 ### `make delete-data`
 
@@ -83,7 +83,7 @@ Destroys everything, and removes the docker images used.
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-  You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+  You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
   ```bash
   mattermost/mattermost-enterprise-edition:release-7.7
@@ -99,7 +99,7 @@ Doing this will wipe anything you have in the database and any existing Mattermo
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-  You're just replacing the tag at the end, ths one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+  You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
   ```bash
   mattermost/mattermost-enterprise-edition:release-7.7

@@ -20,13 +20,16 @@ restore-keycloak:
 echo-logins:
 	@./scripts/general.sh logins
 
-start: 
+run: 
 	@echo "Starting..."
 	@make restore-keycloak
 	@docker-compose up -d
 	@make setup-mattermost
 	@make echo-logins
-	
+
+start:
+	@make run
+
 stop:
 	@echo "Stopping..."
 	@docker-compose stop

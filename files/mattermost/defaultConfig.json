@@ -62,7 +62,7 @@
       "IdAttribute": "uid",
       "PositionAttribute": "",
       "LoginIdAttribute": "uid",
-      "PictureAttribute": "",
+      "PictureAttribute": "jpegPhoto",
       "SyncIntervalMinutes": 60,
       "SkipCertificateVerification": false,
       "PublicCertificateFile": "",

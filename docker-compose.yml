@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # mysql:
   #   container_name: cs-repro-mysql
@@ -131,7 +129,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: mattermost/mattermost-enterprise-edition:release-9.0
+    image: mattermost/mattermost-enterprise-edition:release-9.6
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

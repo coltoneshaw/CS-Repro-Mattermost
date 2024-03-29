@@ -2,6 +2,8 @@
 
 This is a basic reproduction that includes various components preconfigured like SAML, LDAP, advanced logging, prometheus, grafana, and elasticsearch.
 
+- [LDAP](#ldap)
+
 ## Making Changes
 
 If you're testing changes with Mattermost I do not suggest running `make restart` or `make stop` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `make restart-mattermost`. 
@@ -121,3 +123,76 @@ All the Mattermost grafana charts are already installed and linked, you just hav
 2. Sign in with `admin` / `admin`. Change the password if you want, I don't suggest it.
 3. Click `Dashboards` > `Manage`
 4. Click any of the dashboards you want to view. 
+
+
+## LDAP
+
+### Adding Users
+
+You can easily add users to the ldap container by using the provided ldif file and query.
+
+Here is an example of the command. If you run this right now you'll add two users to your ldap environment.
+Note that if the data already exists in the ldif the command will fail.
+
+```bash
+docker exec -it cs-repro-openldap ldapmodify \
+  -x \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,dc=planetexpress,dc=com" \
+  -w GoodNewsEveryone \
+  -f /ldap/ldapadd.ldif
+```
+
+### Adding Group Members
+
+To add a group member we have to use `ldapmodify`. Below is an example of the command. If you run the example we take the two user from the above command and add them to the `robot_mafia` group.
+
+```bash
+docker exec -it cs-repro-openldap ldapmodify \
+  -x \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,dc=planetexpress,dc=com" \
+  -w GoodNewsEveryone \
+  -f /ldap/ldapmodify.ldif
+```
+
+### LDAP Search
+
+Everything that comes after the `-w` flag is a part of the search on the base DN. Just replace that with what you have in the user filter. 
+
+#### Searching for Groups
+
+```bash
+docker exec -it cs-repro-openldap ldapsearch \
+  -x -b "DC=planetexpress,DC=com" \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,dc=planetexpress,dc=com" \
+  -w GoodNewsEveryone \
+  "(objectClass=Group)"
+```
+
+#### Searching for People
+
+```bash
+docker exec -it cs-repro-openldap ldapsearch \
+  -x -b "DC=planetexpress,DC=com" \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,dc=planetexpress,dc=com" \
+  -w GoodNewsEveryone \
+  "(objectClass=Person)"
+```
+
+### Add New Attributes to LDAP
+
+Let's say you need a special attribute added to LDAP for testing, like a uniqueID you can tweak. Using the below command we'll add an attribute called `uniqueID` to our users from above. If we want to extend this to the rest of Futurama they'll need to be in the ldif file. 
+
+```bash
+docker exec -it cs-repro-openldap ldapmodify \
+  -x \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,cn=config" \
+  -w GoodNewsEveryone \
+  -f /ldap/addUniqueID.ldif
+```
+
+A few notes, when adding this attribute you must add the `customPerson` objectclass to the person before you can assign the attribute. See the `ldapadd.ldif` file for help. 

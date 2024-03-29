@@ -1,11 +1,13 @@
-# README
+# CS Repro Mattermost
 
-This is a basic reproduction that includes various components preconfigured like SAML, LDAP, advanced logging, prometheus, grafana, and elasticsearch.
+(Customer Success Repro Mattermost, although Colton Shaw Repro sounds cooler.)
+
+This is designed to be used as a reproduction of a standard customer production environment. You'll find preconfigured SAML, LDAP, Advanced Logging, Prometheus, Grafana, Elasticsearch, and read replicas. 
 
 - [LDAP](#ldap)
 - [Commands](#commands)
 - [Accounts](#accounts)
-- [Grafana](#use-grafana)
+- [Grafana](#grafana)
 - [Guides](#guides)
   - [How to upgrade](#how-to-upgrade)
   - [How to Downgrade](#how-to-downgrade)
@@ -13,67 +15,24 @@ This is a basic reproduction that includes various components preconfigured like
   - [MMCTL](#mmctl)
   - [Adding Postgres Read Replicas](#adding-postgres-read-replicas)
 
-## Making Changes
-
-If you're testing changes with Mattermost I do not suggest running `make restart` or `make stop` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `make restart-mattermost`. 
-
-Additionally, the keycloak container can take up to 5 minutes to spin up. If it's taking a while with no logs output, just restart the keycloak container **only**.
-
 ## Getting Started
 
 1. Add an enterprise license to this folder with the name `license.mattermost`
-  note: If you ignore this step Mattermost will not spin up.
+  
+    note: If you ignore this step Mattermost will not spin up.
 
 2. Start the docker containers. This may take a second to download everything. 
 
-  You'll be prompted on setting up the test data.
+    You'll be prompted on setting up the test data.
 
-  ```make
-  make start
-  ```
+    ```make
+    make start
+    ```
 
 3. Sign into Mattermost
 
-  - You can use any of the accounts to sign in.
-  - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
-
-## Commands
-
-### `make backup-keycloak`
-
-This takes your existing keycloak setup and backs it up in the files directory. You most likely don't need this frequently.
-
-### `make restore-keycloak`
-
-If you made changes to keycloak, this will copy over the keycloak data. You'll want to delete the `./volumes/keycloak` first.
-
-### `make stop`
-
-Simply stops the running containers.
-
-### `make restart`
-
-Simply restarts the docker containers.
-
-### `make restart-mattermost`
-
-Restarts only the Mattermost containers.
-
-### `make reset`
-
-This deletes the volumes directory and starts everything again. Easiest way to get the environment back the default.
-
-### `make delete-data`
-
-This clears all data from the volumes and stops Mattermost.
-
-### `make nuke`
-
-Destroys everything (Except your life). 
-
-### `make nuke-rmi`
-
-Destroys everything, and removes the docker images used. 
+    - You can use any of the accounts to sign in.
+    - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
 
 ## Accounts
 
@@ -88,21 +47,41 @@ Destroys everything, and removes the docker images used.
 | zoidberg  | zoidberg  | User          | Member          | Yes           | Yes           |
 | amy       | amy       | User          | Member          | Yes           | Yes           |
 
+## Making Changes
+
+If you're testing changes with Mattermost I do not suggest running `make restart` or `make stop` because the keycloak instance can quickly get into a failed state with too frequent of restarts. Instead do `make restart-mattermost`.
+
+Additionally, the keycloak container can take up to 5 minutes to spin up. If it's taking a while with no logs output, just restart the keycloak container **only**.
+
+## Commands
+
+- **`make start` / `make run`**: Initializes the environment.
+- **`make start-replica`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
+- **`make backup-keycloak`**: Generates a backup of the current Keycloak setup in the files directory. Useful for infrequent backups.
+- **`make restore-keycloak`**: Restores Keycloak data from an existing backup. Ensure `./volumes/keycloak` is cleared before restoration.
+- **`make stop`**: Halts all running containers.
+- **`make restart`**: Restarts all Docker containers in the environment.
+- **`make restart-mattermost`**: Specifically restarts only the Mattermost containers for quick testing.
+- **`make reset`**: Cleans the volumes directory and reinitializes the environment to default settings.
+- **`make delete-data`**: Clears all data within volumes, effectively stopping Mattermost.
+- **`make nuke`**: Erases all configurations and data, sparing your personal data.
+- **`make nuke-rmi`**: Additionally removes all Docker images used by the environment, making it a complete cleanup.
+
 ## Guides
 
 ### How to upgrade
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-  You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+    You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
-  ```bash
-  mattermost/mattermost-enterprise-edition:release-7.7
-  ```
+    ```bash
+    mattermost/mattermost-enterprise-edition:release-7.7
+    ```
 
 2. Run `make restart-mattermost`
 
-  This will bounce the Mattermost container only.
+    This will bounce the Mattermost container only.
 
 ### How to Downgrade
 
@@ -195,15 +174,14 @@ You can access each replica with the same username / password. Just need to chan
 - replica_1 - `postgresql://mmuser:mmuser_password@localhost:5433/mattermost`
 - replica_2 - `postgresql://mmuser:mmuser_password@localhost:5434/mattermost`
 
-## Use Grafana
+## Grafana
 
-All the Mattermost grafana charts are already installed and linked, you just have to access them. 
+All the Mattermost grafana charts are already installed and linked, you just have to access them.
 
 1. Go to `localhost:3000`
 2. Sign in with `admin` / `admin`. Change the password if you want, I don't suggest it.
 3. Click `Dashboards` > `Manage`
-4. Click any of the dashboards you want to view. 
-
+4. Click any of the dashboards you want to view.
 
 ## LDAP
 

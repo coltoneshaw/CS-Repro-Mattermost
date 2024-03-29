@@ -88,6 +88,7 @@ services:
       - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
       - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
       - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
+      - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
     environment:
       - MM_SqlSettings_DriverName=postgres
       - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes

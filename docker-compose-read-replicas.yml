@@ -5,6 +5,7 @@ services:
       - POSTGRES_USER=mmuser
       - POSTGRES_PASSWORD=mmuser_password
       - LISTEN_ADDRESS="*"
+      - REPLICA_NAME=replica_1
     image: postgres:14-alpine
     restart: unless-stopped
     ports:
@@ -17,14 +18,9 @@ services:
       - /tmp
       - /var/run/postgresql
     volumes:
-      - ./files/postgres/replica/replica_1/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./files/postgres/replica/init.sh:/docker-entrypoint-initdb.d/init.sh
       - ./volumes/db/replica_1/data:/var/lib/postgresql/data
       - ./files/postgres/replica:/files/postgres/replica
-    healthcheck:
-      test: pg_isready -U mmuser -d mattermost -h cs-repro-postgres
-      interval: 10s
-      timeout: 3s
-      retries: 3
     depends_on:
       - mattermost
       - postgres
@@ -34,6 +30,7 @@ services:
       - POSTGRES_USER=mmuser
       - POSTGRES_PASSWORD=mmuser_password
       - LISTEN_ADDRESS="*"
+      - REPLICA_NAME=replica_2
     image: postgres:14-alpine
     restart: unless-stopped
     ports:
@@ -46,14 +43,9 @@ services:
       - /tmp
       - /var/run/postgresql
     volumes:
-      - ./files/postgres/replica/replica_2/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./files/postgres/replica/init.sh:/docker-entrypoint-initdb.d/init.sh
       - ./files/postgres/replica:/files/postgres/replica
       - ./volumes/db/replica_2/data:/var/lib/postgresql/data
-    healthcheck:
-      test: pg_isready -U mmuser -d mattermost -h cs-repro-postgres
-      interval: 10s
-      timeout: 3s
-      retries: 3
     depends_on:
       - mattermost
       - postgres

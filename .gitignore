@@ -4,6 +4,12 @@ license.txt
 ## Ignoring keycloak so it can be pulled already setup.
 volumes
 
+## We hate DS_Store files.
 **/.DS_Store
 .DS_Store
-**/baseConfig.conf
+
+files/postgres/replica/replica_1.conf
+files/postgres/replica/replica_1_postgres.conf
+
+files/postgres/replica/replica_2.conf
+files/postgres/replica/replica_2_postgres.conf

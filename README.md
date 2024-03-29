@@ -171,13 +171,29 @@ docker exec -it cs-repro-mattermost mmctl user list --local
 
 ### Adding Postgres Read Replicas
 
-The basic structure for you to add two read replicas has been included in the repo already. To utilize it you need to start your files with the below command. This should work on a running install of this repo also.
+The basic structure for you to add two read replicas has been included in the repo already. This will take 2-5 minutes to get the replication setup, based on how much data you have in the database right now.
+
+If you are starting from fresh run:
 
 ```bash
 make start-replicas
 ```
 
-This will take 2-5 minutes to get the replication setup, based on how much data you have in the database right now.
+If you want to add replicas to an existing cs repro:
+
+```bash
+make start-replicas
+```
+
+#### Replication Config and access
+
+All replica config files can be found in `./files/postgres/replica`. You can edit the `replica_x.conf` file to edit the specific configuration for a replica. You will need to restart the replicas once down, easiest way is `make stop && make start`
+
+You can access each replica with the same username / password. Just need to change the port. Here's the output when using `postgresql`. Note if you use this in the mattermost config you need to replace `postgresql` to `postgres`.
+
+- primary - `postgresql://mmuser:mmuser_password@localhost:5432/mattermost`
+- replica_1 - `postgresql://mmuser:mmuser_password@localhost:5433/mattermost`
+- replica_2 - `postgresql://mmuser:mmuser_password@localhost:5434/mattermost`
 
 ## Use Grafana
 

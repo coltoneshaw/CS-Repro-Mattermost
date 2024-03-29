@@ -31,8 +31,14 @@ start:
 	@make run
 
 start-replicas:
+	@make run
 	@echo "Starting the replicas... hold on a moment..."
 	@docker-compose -f docker-compose.yml -f docker-compose-read-replicas.yml up -d
+	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/replicaConfig.json --local
+	@echo "Sleeping for 2 minutes while the replication is established. Be back in a moment..."
+	@sleep 120
+	@make restart-mattermost
+	@echo "Should be up and running. Go crazy."
 
 stop:
 	@echo "Stopping..."
@@ -69,6 +75,7 @@ delete-dockerfiles:
 	@echo "Deleting data..."
 	@docker-compose rm
 	@rm -rf ./volumes
+	@rm -rf ./files/postgres/replica/replica_*
 	@echo "Done"
 
 delete-data: stop delete-dockerfiles

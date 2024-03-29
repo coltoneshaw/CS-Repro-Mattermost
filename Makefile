@@ -30,6 +30,10 @@ run:
 start:
 	@make run
 
+start-replicas:
+	@echo "Starting the replicas... hold on a moment..."
+	@docker-compose -f docker-compose.yml -f docker-compose-read-replicas.yml up -d
+
 stop:
 	@echo "Stopping..."
 	@docker-compose stop

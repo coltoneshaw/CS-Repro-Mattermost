@@ -11,6 +11,7 @@ This is a basic reproduction that includes various components preconfigured like
   - [How to Downgrade](#how-to-downgrade)
   - [Migrating to Config in DB](#using-config-in-db)
   - [MMCTL](#mmctl)
+  - [Adding Postgres Read Replicas](#adding-postgres-read-replicas)
 
 ## Making Changes
 
@@ -167,6 +168,16 @@ To use `mmctl` it's already setup for local, just run the below docker command.
 ```bash
 docker exec -it cs-repro-mattermost mmctl user list --local
 ```
+
+### Adding Postgres Read Replicas
+
+The basic structure for you to add two read replicas has been included in the repo already. To utilize it you need to start your files with the below command. This should work on a running install of this repo also.
+
+```bash
+make start-replicas
+```
+
+This will take 2-5 minutes to get the replication setup, based on how much data you have in the database right now.
 
 ## Use Grafana
 

@@ -13,7 +13,7 @@ mail: jMousepad@aol.com
 title: Robot Mafia Henchperson
 uid: jmousepad
 jpegPhoto: < file:///ldap/photos/JoeyMousepad.jpg
-uniqueId: 2
+uniqueId: 1
 
 dn: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com
 changetype: add
@@ -30,7 +30,7 @@ mail: dsmith@planetexpress.com
 title: Robot Mafia Godfather
 uid: dsmith
 jpegPhoto: < file:///ldap/photos/Donbot.jpg
-uniqueId: 1
+uniqueId: 2
 
 dn: cn=robot_mafia,ou=people,dc=planetexpress,dc=com
 changetype: add
@@ -63,7 +63,7 @@ add: objectClass
 objectClass: customPerson
 -
 add: uniqueId
-uniqueId: 4
+uniqueId: 5
 
 dn: cn=Hermes Conrad,ou=people,dc=planetexpress,dc=com
 changetype: modify
@@ -71,7 +71,7 @@ add: objectClass
 objectClass: customPerson
 -
 add: uniqueId
-uniqueId: 5
+uniqueId: 6
 
 dn: cn=Turanga Leela,ou=people,dc=planetexpress,dc=com
 changetype: modify
@@ -79,7 +79,7 @@ add: objectClass
 objectClass: customPerson
 -
 add: uniqueId
-uniqueId: 5
+uniqueId: 7
 
 dn: cn=Bender Bending Rodríguez,ou=people,dc=planetexpress,dc=com
 changetype: modify
@@ -87,7 +87,7 @@ add: objectClass
 objectClass: customPerson
 -
 add: uniqueId
-uniqueId: 6
+uniqueId: 8
 
 dn: cn=Amy Wong+sn=Kroker,ou=people,dc=planetexpress,dc=com
 changetype: modify
@@ -95,4 +95,4 @@ add: objectClass
 objectClass: customPerson
 -
 add: uniqueId
-uniqueId: 7
+uniqueId: 9

@@ -12,7 +12,6 @@ mail: jMousepad@aol.com
 title: Robot Mafia Henchperson
 uid: jmousepad
 jpegPhoto: < file:///ldap/photos/JoeyMousepad.jpg
-uniqueId: 1
 
 dn: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com
 changetype: add
@@ -28,7 +27,6 @@ mail: dsmith@mafia.com
 title: Robot Mafia Godfather
 uid: dsmith
 jpegPhoto: < file:///ldap/photos/Donbot.jpg
-uniqueId: 2
 
 dn: cn=robot_mafia,ou=people,dc=planetexpress,dc=com
 changetype: add

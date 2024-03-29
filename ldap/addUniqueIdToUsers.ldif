@@ -16,10 +16,10 @@ uniqueId: 2
 
 dn: cn=Joey Mousepad,ou=people,dc=planetexpress,dc=com
 changetype: modify
-modify: objectClass
+add: objectClass
 objectClass: customPerson
 -
-delete: uniqueId
+add: uniqueId
 uniqueId: 3
 
 dn: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com

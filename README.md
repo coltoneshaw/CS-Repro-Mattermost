@@ -214,5 +214,5 @@ docker exec -it cs-repro-openldap ldapmodify \
 To use `mmctl` it's already setup for local, just run the below docker command.
 
 ```bash
-docker exec -it cs-repro-mattermost mmctl config get SqlSettings.DataSource
+docker exec -it cs-repro-mattermost mmctl user list --localhost
 ```

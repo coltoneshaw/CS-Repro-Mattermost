@@ -1,29 +1,4 @@
 services:
-  # mysql:
-  #   container_name: cs-repro-mysql
-  #   image: mysql:8
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "mattermost"
-  #     # So you don't have to use root, but you can if you like
-  #     MYSQL_USER: "mmuser"
-  #     # You can use whatever password you like
-  #     MYSQL_PASSWORD: "mmuser_password"
-  #     # Password for root access
-  #     MYSQL_ROOT_PASSWORD: "mmuser_password"
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     timeout: 20s
-  #     retries: 10
-  #   ports:
-  #     # <Port exposed> : <MySQL Port running inside container>
-  #     - "3306:3306"
-  #   expose:
-  #     # Opens port 3306 on the container
-  #     - "3306"
-  #     # Where our data will be persisted
-  #   volumes:
-  #     - ./volumes/db/mysql:/var/lib/mysql
   postgres:
     container_name: cs-repro-postgres
     environment:
@@ -49,48 +24,6 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  # postgres-replica:
-  #   container_name: cs-repro-postgres-replica
-  #   environment:
-  #     - POSTGRES_USER=mmuser
-  #     - POSTGRES_PASSWORD=mmuser_password
-  #     # - POSTGRES_DB=mattermost
-  #     - LISTEN_ADDRESS="*"
-  #   image: postgres:13-alpine
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5433:5432"
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   pids_limit: 100
-  #   read_only: false
-  #   tmpfs:
-  #     - /tmp
-  #     - /var/run/postgresql
-  #   volumes:
-  #     # - ./volumes/db-replica/var/lib/postgresql/data:/var/lib/postgresql/data
-  #     - ./volumes/db-replica/data2:/var/lib/postgresql/data
-  # postgres-replica2:
-  #   container_name: cs-repro-postgres-replica2
-  #   environment:
-  #     - POSTGRES_USER=mmuser
-  #     - POSTGRES_PASSWORD=mmuser_password
-  #     # - POSTGRES_DB=mattermost
-  #     - LISTEN_ADDRESS="*"
-  #   image: postgres:13-alpine
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5434:5432"
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   pids_limit: 100
-  #   read_only: false
-  #   tmpfs:
-  #     - /tmp
-  #     - /var/run/postgresql
-  #   volumes:
-  #     # - ./volumes/db-replica2/var/lib/postgresql/data:/var/lib/postgresql/data
-  #     - ./volumes/db-replica2/data2:/var/lib/postgresql/data
   openldap:
     platform: linux/amd64
     container_name: cs-repro-openldap
@@ -98,7 +31,7 @@ services:
     restart: unless-stopped
     image: rroemhild/test-openldap:latest
     volumes:
-      - ./ldap:/ldap:rw
+      - ./ldap:/mattermost/config:rw
     ports:
       - "10389:10389"
       - "10636:10636"
@@ -203,3 +136,71 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+  # mysql:
+  #   container_name: cs-repro-mysql
+  #   image: mysql:8
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: "mattermost"
+  #     # So you don't have to use root, but you can if you like
+  #     MYSQL_USER: "mmuser"
+  #     # You can use whatever password you like
+  #     MYSQL_PASSWORD: "mmuser_password"
+  #     # Password for root access
+  #     MYSQL_ROOT_PASSWORD: "mmuser_password"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     timeout: 20s
+  #     retries: 10
+  #   ports:
+  #     # <Port exposed> : <MySQL Port running inside container>
+  #     - "3306:3306"
+  #   expose:
+  #     # Opens port 3306 on the container
+  #     - "3306"
+  #     # Where our data will be persisted
+  #   volumes:
+  #     - ./volumes/db/mysql:/var/lib/mysql
+
+ # postgres-replica:
+  #   container_name: cs-repro-postgres-replica
+  #   environment:
+  #     - POSTGRES_USER=mmuser
+  #     - POSTGRES_PASSWORD=mmuser_password
+  #     # - POSTGRES_DB=mattermost
+  #     - LISTEN_ADDRESS="*"
+  #   image: postgres:13-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5433:5432"
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   pids_limit: 100
+  #   read_only: false
+  #   tmpfs:
+  #     - /tmp
+  #     - /var/run/postgresql
+  #   volumes:
+  #     # - ./volumes/db-replica/var/lib/postgresql/data:/var/lib/postgresql/data
+  #     - ./volumes/db-replica/data2:/var/lib/postgresql/data
+  # postgres-replica2:
+  #   container_name: cs-repro-postgres-replica2
+  #   environment:
+  #     - POSTGRES_USER=mmuser
+  #     - POSTGRES_PASSWORD=mmuser_password
+  #     # - POSTGRES_DB=mattermost
+  #     - LISTEN_ADDRESS="*"
+  #   image: postgres:13-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5434:5432"
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   pids_limit: 100
+  #   read_only: false
+  #   tmpfs:
+  #     - /tmp
+  #     - /var/run/postgresql
+  #   volumes:
+  #     # - ./volumes/db-replica2/var/lib/postgresql/data:/var/lib/postgresql/data
+  #     - ./volumes/db-replica2/data2:/var/lib/postgresql/data

@@ -3,7 +3,14 @@
 This is a basic reproduction that includes various components preconfigured like SAML, LDAP, advanced logging, prometheus, grafana, and elasticsearch.
 
 - [LDAP](#ldap)
-- [MMCTL](#mmctl)
+- [Commands](#commands)
+- [Accounts](#accounts)
+- [Grafana](#use-grafana)
+- [Guides](#guides)
+  - [How to upgrade](#how-to-upgrade)
+  - [How to Downgrade](#how-to-downgrade)
+  - [Migrating to Config in DB](#using-config-in-db)
+  - [MMCTL](#mmctl)
 
 ## Making Changes
 
@@ -102,19 +109,64 @@ Doing this will wipe anything you have in the database and any existing Mattermo
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-  You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+    You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
 
-  ```bash
-  mattermost/mattermost-enterprise-edition:release-7.7
-  ```
+    ```bash
+    mattermost/mattermost-enterprise-edition:release-7.7
+    ```
   
 2. Run `make downgrade`
 
-  This will:
+    This will:
 
-  - delete the database
-  - Restart the database container
-  - Restart the Mattermost container
+    - delete the database
+    - Restart the database container
+    - Restart the Mattermost container
+
+### Using Config in DB
+
+Config in DB has intentionally not been enabled by default to allow you to edit the `config.json` file directly for faster repros. However, if you want to migrate to config in DB just follow the below.
+
+1. Start the container and init the default data. `make start`... `y`.
+
+2. Edit the `docker-compose.yml`
+
+    ```diff
+      mattermost:
+        environment:
+          - MM_SqlSettings_DriverName=postgres
+          - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+          - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
+          # - MM_SqlSettings_DriverName=mysql
+          # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
+          - MM_ServiceSettings_EnableLocalMode=true
+          - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
+          - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+          ## Disable this to migrate your config to the database
+    -#     - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+    +      - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+    ```
+
+3. Move the config to the DB
+
+    ```bash
+    docker exec -it cs-repro-mattermost mmctl config migrate ./config/config.json "postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes" --local
+    ```
+
+4. Restart Mattermost with a force stop / start to pickup the new env vars
+
+    ```bash
+    make stop
+    make start
+    ```
+
+### MMCTL
+
+To use `mmctl` it's already setup for local, just run the below docker command.
+
+```bash
+docker exec -it cs-repro-mattermost mmctl user list --local
+```
 
 ## Use Grafana
 
@@ -207,12 +259,4 @@ docker exec -it cs-repro-openldap ldapmodify \
   -D "cn=admin,dc=planetexpress,dc=com" \
   -w GoodNewsEveryone \
   -f /ldap/addUniqueIdToUsers.ldif
-```
-
-## MMCTL
-
-To use `mmctl` it's already setup for local, just run the below docker command.
-
-```bash
-docker exec -it cs-repro-mattermost mmctl user list --localhost
 ```

@@ -4,11 +4,10 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-objectClass: customPerson
 cn: Joey Mousepad
 sn: Mousepad
 givenName: Joey
-userPassword: password
+userPassword: jmousepad
 mail: jMousepad@aol.com
 title: Robot Mafia Henchperson
 uid: jmousepad
@@ -21,12 +20,11 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-objectClass: customPerson
 cn: Donbot Smith
 sn: Smith
 givenName: Donbot
-userPassword: password
-mail: dsmith@planetexpress.com
+userPassword: dsmith
+mail: dsmith@mafia.com
 title: Robot Mafia Godfather
 uid: dsmith
 jpegPhoto: < file:///ldap/photos/Donbot.jpg
@@ -40,59 +38,3 @@ groupType: 2147483650
 cn: robot_mafia
 member: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com
 member: cn=Joey Mousepad,ou=people,dc=planetexpress,dc=com
-
-dn: cn=Hubert J. Farnsworth,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 3
-
-dn: cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 4
-
-dn: cn=John A. Zoidberg,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 5
-
-dn: cn=Hermes Conrad,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 6
-
-dn: cn=Turanga Leela,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 7
-
-dn: cn=Bender Bending Rodríguez,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 8
-
-dn: cn=Amy Wong+sn=Kroker,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: objectClass
-objectClass: customPerson
--
-add: uniqueId
-uniqueId: 9

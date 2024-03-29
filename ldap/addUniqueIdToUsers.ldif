@@ -1,0 +1,74 @@
+dn: cn=Hubert J. Farnsworth,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 1
+
+dn: cn=Hermes Conrad,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 2
+
+dn: cn=Joey Mousepad,ou=people,dc=planetexpress,dc=com
+changetype: modify
+modify: objectClass
+objectClass: customPerson
+-
+delete: uniqueId
+uniqueId: 3
+
+dn: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 4
+
+
+dn: cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 4
+
+dn: cn=John A. Zoidberg,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 5
+
+
+
+dn: cn=Turanga Leela,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 7
+
+dn: cn=Bender Bending Rodríguez,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 8
+
+dn: cn=Amy Wong+sn=Kroker,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: objectClass
+objectClass: customPerson
+-
+add: uniqueId
+uniqueId: 9

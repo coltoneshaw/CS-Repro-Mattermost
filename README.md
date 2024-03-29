@@ -3,6 +3,7 @@
 This is a basic reproduction that includes various components preconfigured like SAML, LDAP, advanced logging, prometheus, grafana, and elasticsearch.
 
 - [LDAP](#ldap)
+- [MMCTL](#mmctl)
 
 ## Making Changes
 
@@ -196,3 +197,22 @@ docker exec -it cs-repro-openldap ldapmodify \
 ```
 
 A few notes, when adding this attribute you must add the `customPerson` objectclass to the person before you can assign the attribute. See the `ldapadd.ldif` file for help. 
+
+Now that you've added the Id to the environment, you have to add it to the users.
+
+```bash
+docker exec -it cs-repro-openldap ldapmodify \
+  -x \
+  -H ldap://openldap:10389 \
+  -D "cn=admin,dc=planetexpress,dc=com" \
+  -w GoodNewsEveryone \
+  -f /ldap/addUniqueIdToUsers.ldif
+```
+
+## MMCTL
+
+To use `mmctl` it's already setup for local, just run the below docker command.
+
+```bash
+docker exec -it cs-repro-mattermost mmctl config get SqlSettings.DataSource
+```

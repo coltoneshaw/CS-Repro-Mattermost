@@ -1,11 +1,6 @@
 services:
   postgres:
     container_name: cs-repro-postgres
-    environment:
-      - POSTGRES_USER=mmuser
-      - POSTGRES_PASSWORD=mmuser_password
-      - POSTGRES_DB=mattermost
-      - LISTEN_ADDRESS="*"
     image: postgres:14-alpine
     restart: unless-stopped
     ports:
@@ -19,11 +14,18 @@ services:
       - /var/run/postgresql
     volumes:
       - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - ./files/postgres/primary/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./files/postgres/primary/primary_config.conf:/files/postgres/primary/primary_config.conf
     healthcheck:
       test: pg_isready -U mmuser -d mattermost
       interval: 10s
       timeout: 3s
       retries: 3
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - POSTGRES_DB=mattermost
+      - LISTEN_ADDRESS="*"
   openldap:
     platform: linux/amd64
     container_name: cs-repro-openldap
@@ -161,46 +163,3 @@ services:
   #     # Where our data will be persisted
   #   volumes:
   #     - ./volumes/db/mysql:/var/lib/mysql
-
- # postgres-replica:
-  #   container_name: cs-repro-postgres-replica
-  #   environment:
-  #     - POSTGRES_USER=mmuser
-  #     - POSTGRES_PASSWORD=mmuser_password
-  #     # - POSTGRES_DB=mattermost
-  #     - LISTEN_ADDRESS="*"
-  #   image: postgres:13-alpine
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5433:5432"
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   pids_limit: 100
-  #   read_only: false
-  #   tmpfs:
-  #     - /tmp
-  #     - /var/run/postgresql
-  #   volumes:
-  #     # - ./volumes/db-replica/var/lib/postgresql/data:/var/lib/postgresql/data
-  #     - ./volumes/db-replica/data2:/var/lib/postgresql/data
-  # postgres-replica2:
-  #   container_name: cs-repro-postgres-replica2
-  #   environment:
-  #     - POSTGRES_USER=mmuser
-  #     - POSTGRES_PASSWORD=mmuser_password
-  #     # - POSTGRES_DB=mattermost
-  #     - LISTEN_ADDRESS="*"
-  #   image: postgres:13-alpine
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5434:5432"
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   pids_limit: 100
-  #   read_only: false
-  #   tmpfs:
-  #     - /tmp
-  #     - /var/run/postgresql
-  #   volumes:
-  #     # - ./volumes/db-replica2/var/lib/postgresql/data:/var/lib/postgresql/data
-  #     - ./volumes/db-replica2/data2:/var/lib/postgresql/data

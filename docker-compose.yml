@@ -31,7 +31,7 @@ services:
       - POSTGRES_PASSWORD=mmuser_password
       - POSTGRES_DB=mattermost
       - LISTEN_ADDRESS="*"
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     restart: unless-stopped
     ports:
       - "5432:5432"
@@ -148,19 +148,20 @@ services:
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
       - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
-      - ./files/mattermost/samlCert.crt:/mattermost/config/samlCert.crt
+      - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
       - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
       - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
     environment:
       - MM_SqlSettings_DriverName=postgres
       - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+      - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
       # - MM_SqlSettings_DriverName=mysql
       # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
       - MM_ServiceSettings_EnableLocalMode=true
       - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
       - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
-    # command:
-    #   - mmctl config patch /mattermost/config/defaultConfig.json --local
+      ## Disable this to migrate your config to the database
+#      - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
   keycloak:
     container_name: cs-repro-keycloak
     restart: unless-stopped
@@ -191,7 +192,12 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - ./volumes/elastic:/usr/share/elasticsearch/data
+      - ./volumes/elastic/data:/usr/share/elasticsearch/data
+      - ./volumes/elastic/plugins:/usr/share/elasticsearch/plugins
+    command: >
+      /bin/sh -c "./bin/elasticsearch-plugin list | grep -q analysis-icu 
+      || yes | ./bin/elasticsearch-plugin install --silent analysis-icu; 
+      /usr/local/bin/docker-entrypoint.sh eswrapper"
     ports:
       - 9200:9200
       - 9300:9300

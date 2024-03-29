@@ -1,5 +1,0 @@
-dn: cn=ship_crew,ou=people,dc=planetexpress,dc=com
-changetype: modify
-add: member
-member: uid=jdoe,ou=people,dc=planetexpress,dc=com
-member: uid=jsmith,ou=people,dc=planetexpress,dc=com

@@ -1,0 +1,5 @@
+dn: cn=ship_crew,ou=people,dc=planetexpress,dc=com
+changetype: modify
+add: member
+member: cn=Donbot Smith,ou=people,dc=planetexpress,dc=com
+member: cn=Joey Mousepad,ou=people,dc=planetexpress,dc=com

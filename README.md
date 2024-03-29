@@ -141,7 +141,7 @@ docker exec -it cs-repro-openldap ldapmodify \
   -H ldap://openldap:10389 \
   -D "cn=admin,dc=planetexpress,dc=com" \
   -w GoodNewsEveryone \
-  -f /ldap/ldapadd.ldif
+  -f /ldap/addUsers.ldif
 ```
 
 ### Adding Group Members
@@ -154,7 +154,7 @@ docker exec -it cs-repro-openldap ldapmodify \
   -H ldap://openldap:10389 \
   -D "cn=admin,dc=planetexpress,dc=com" \
   -w GoodNewsEveryone \
-  -f /ldap/ldapmodify.ldif
+  -f /ldap/addToGroup.ldif
 ```
 
 ### LDAP Search

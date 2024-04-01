@@ -139,7 +139,91 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-  # mysql:
+  postgres-replica-1:
+    container_name: cs-repro-postgres-replica-1
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - LISTEN_ADDRESS="*"
+      - REPLICA_NAME=replica_1
+    image: postgres:14-alpine
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: false
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ./files/postgres/replica/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./volumes/db/replica_1/data:/var/lib/postgresql/data
+      - ./files/postgres/replica:/files/postgres/replica
+    depends_on:
+      - postgres
+  postgres-replica-2:
+    container_name: cs-repro-postgres-replica-2
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - LISTEN_ADDRESS="*"
+      - REPLICA_NAME=replica_2
+    image: postgres:14-alpine
+    restart: unless-stopped
+    ports:
+      - "5434:5432"
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: false
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ./files/postgres/replica/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./files/postgres/replica:/files/postgres/replica
+      - ./volumes/db/replica_2/data:/var/lib/postgresql/data
+    depends_on:
+      - postgres
+  mattermost-2:
+      platform: linux/amd64
+      container_name: cs-repro-mattermost-2
+      depends_on:
+        postgres:
+          condition: service_healthy
+      image: mattermost/mattermost-enterprise-edition:release-9.6
+      restart: unless-stopped
+      security_opt:
+        - no-new-privileges:true
+      pids_limit: 200
+      read_only: false
+      ports:
+        - "8066:8065"
+        - "8068:8067"
+      tmpfs:
+        - /tmp
+      volumes:
+        - ./volumes/mattermost/config:/mattermost/config:rw
+        - ./volumes/mattermost/data:/mattermost/data:rw
+        - ./volumes/mattermost_2/logs:/mattermost/logs:rw
+        - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
+        - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
+        - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
+        - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
+        - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
+        - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
+        - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
+        - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
+      environment:
+        - MM_SqlSettings_DriverName=postgres
+        - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+        - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
+        - MM_ServiceSettings_EnableLocalMode=true
+        - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
+        - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+# mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8
   #   restart: always
@@ -164,3 +248,4 @@ services:
   #     # Where our data will be persisted
   #   volumes:
   #     - ./volumes/db/mysql:/var/lib/mysql
+   

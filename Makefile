@@ -23,22 +23,29 @@ echo-logins:
 run: 
 	@echo "Starting..."
 	@make restore-keycloak
-	@docker-compose up -d
+	@make run-core
 	@make setup-mattermost
 	@make echo-logins
 
-start:
-	@make run
+run-core:
+	@echo "Starting the core services... hang in there."
+	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak
 
-start-replicas:
-	@make run
-	@echo "Starting the replicas... hold on a moment..."
-	@docker-compose -f docker-compose.yml -f docker-compose-read-replicas.yml up -d
+run-db-replicas:
+	@echo "Starting with replicas. Hang in there..."
+	@docker-compose up -d postgres-replica-1 postgres-replica-2
 	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/replicaConfig.json --local
-	@echo "Sleeping for 2 minutes while the replication is established. Be back in a moment..."
-	@sleep 120
-	@make restart-mattermost
 	@echo "Should be up and running. Go crazy."
+
+## Need a way to modify the 
+run-mm-replicas:
+	@echo "Starting Mattermost replicas. Hang in there..."
+	@docker exec -it cs-repro-mattermost mmctl config set ClusterSettings.Enable true --local
+	@docker-compose down mattermost
+	@docker-compose up -d mattermost mattermost-2
+	@echo "Should be up and running. Go crazy."
+
+run-all: run run-db-replicas run-mm-replicas
 
 stop:
 	@echo "Stopping..."

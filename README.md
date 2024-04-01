@@ -21,15 +21,21 @@ This is designed to be used as a reproduction of a standard customer production 
   
     note: If you ignore this step Mattermost will not spin up.
 
-2. Start the docker containers. This may take a second to download everything. 
+2. Start the docker containers.
 
     You'll be prompted on setting up the test data.
 
     ```make
-    make start
+    make run
     ```
 
-3. Sign into Mattermost
+3. (Optional) If you want to start more features you can run one of the below.
+
+    - `make run-db-replicas` - Adding the database replicas. Note this can take 2-3 minutes to spin up.
+    - `make run-mm-replicas` - Adding a Mattermost HA node
+    - `make run-all` - DB replicas and HA Mattermost.
+
+4. Sign into Mattermost
 
     - You can use any of the accounts to sign in.
     - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
@@ -56,7 +62,10 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 ## Commands
 
 - **`make start` / `make run`**: Initializes the environment.
-- **`make start-replica`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
+- **`make run-all`**: Spins up all environment containers with the database replicas and Mattermost HA.
+- You must run `make run` before running the below:
+  - **`make run-db-replica`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
+  - **`make run-mm-replica`: Launches an additional Mattermost node and enables HA.
 - **`make backup-keycloak`**: Generates a backup of the current Keycloak setup in the files directory. Useful for infrequent backups.
 - **`make restore-keycloak`**: Restores Keycloak data from an existing backup. Ensure `./volumes/keycloak` is cleared before restoration.
 - **`make stop`**: Halts all running containers.
@@ -155,13 +164,14 @@ The basic structure for you to add two read replicas has been included in the re
 If you are starting from fresh run:
 
 ```bash
-make start-replicas
+make run
+make run-db-replicas
 ```
 
 If you want to add replicas to an existing cs repro:
 
 ```bash
-make start-replicas
+make run-db-replicas
 ```
 
 #### Replication Config and access
@@ -173,6 +183,20 @@ You can access each replica with the same username / password. Just need to chan
 - primary - `postgresql://mmuser:mmuser_password@localhost:5432/mattermost`
 - replica_1 - `postgresql://mmuser:mmuser_password@localhost:5433/mattermost`
 - replica_2 - `postgresql://mmuser:mmuser_password@localhost:5434/mattermost`
+
+### Mattermost HA
+
+Mattermost HA functionality is built into this repo already, but can be expanded out as needed. To use HA or add to an existing deployment you simply have to do:
+
+```bash
+make run
+make run-mm-replicas
+```
+
+This runs mattermost on two ports that are connected on the backend.
+
+- `localhost:8065`
+- `localhost:8066`
 
 ## Grafana
 

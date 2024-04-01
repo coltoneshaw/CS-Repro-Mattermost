@@ -27,4 +27,4 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-      - targets: ["mattermost:8067"]
+      - targets: ["mattermost:8067", "mattermost-2:8067"]

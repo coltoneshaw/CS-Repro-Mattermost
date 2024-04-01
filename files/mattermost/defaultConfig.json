@@ -9,7 +9,7 @@
       "ConsoleJson": true,
       "EnableColor": false,
       "EnableFile": true,
-      "FileLevel": "INFO",
+      "FileLevel": "DEBUG",
       "FileJson": true,
       "FileLocation": "",
       "EnableWebhookDebugging": true,
@@ -135,5 +135,9 @@
   "PluginSettings": {
       "Enable": true,
       "EnableUploads": true
+  },
+  "ClusterSettings": {
+    "ClusterName": "mattermost",
+    "ReadOnlyConfig": false
   }
 }

@@ -14,6 +14,7 @@ This is designed to be used as a reproduction of a standard customer production 
   - [Migrating to Config in DB](#using-config-in-db)
   - [MMCTL](#mmctl)
   - [Adding Postgres Read Replicas](#adding-postgres-read-replicas)
+- [Calls](#calls)
 
 ## Getting Started
 
@@ -40,6 +41,10 @@ This is designed to be used as a reproduction of a standard customer production 
     - You can use any of the accounts to sign in.
     - The keycloak container can be **very** picky sometimes and require a restart of just that container to sign in with that method the first time.
 
+5. To stop everything run `make stop`.
+
+6. To then bring it up again, without creating new containers, run `make start`. 
+
 ## Accounts
 
 | Username  | Password  | Keycloak Role | Mattermost Role | Can use LDAP? | Can use SAML? |
@@ -61,11 +66,13 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 
 ## Commands
 
-- **`make start` / `make run`**: Initializes the environment.
+- **`make start`**: Starts the containers that already exist, nothing more.
+- **`make run`**: Initializes the environment and creates the containers
 - **`make run-all`**: Spins up all environment containers with the database replicas and Mattermost HA.
 - You must run `make run` before running the below:
   - **`make run-db-replica`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
-  - **`make run-mm-replica`: Launches an additional Mattermost node and enables HA.
+  - **`make run-mm-replica`**: Launches an additional Mattermost node and enables HA.
+  - **`make run-rtcd`**: Launches the RTCD service for Mattermost Calls and updates the config to use it correctly.
 - **`make backup-keycloak`**: Generates a backup of the current Keycloak setup in the files directory. Useful for infrequent backups.
 - **`make restore-keycloak`**: Restores Keycloak data from an existing backup. Ensure `./volumes/keycloak` is cleared before restoration.
 - **`make stop`**: Halts all running containers.
@@ -289,3 +296,7 @@ docker exec -it cs-repro-openldap ldapmodify \
   -w GoodNewsEveryone \
   -f /ldap/addUniqueIdToUsers.ldif
 ```
+
+## Calls
+
+By default this is setup to run on the built in Mattermost calls. You can enable the `rtcd` service by running `make run-rtcd`, which will start up `rtcd` and adjust the settings within Mattermost to work. 

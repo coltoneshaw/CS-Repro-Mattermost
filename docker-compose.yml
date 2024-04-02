@@ -223,6 +223,24 @@ services:
         - MM_ServiceSettings_EnableLocalMode=true
         - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
         - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+  mattermost-rtcd:
+    container_name: cs-repro-mattermost-rtcd
+    platform: linux/amd64
+    image: mattermost/rtcd:latest
+    restart: unless-stopped
+    volumes:
+      - ./volumes/rtcd/logs:/logs:rw
+    environment:
+      - RTCD_LOGGER_ENABLEFILE=true
+      - RTCD_LOGGER_FILELOCATION=/logs
+      - RTCD_LOGGER_FILELEVEL=DEBUG
+      - RTCD_API_SECURITY_ALLOWSELFREGISTRATION=true
+      - RTCD_LOGGER_CONSOLELEVEL=DEBUG
+    ports:
+      - "8443:8443/udp"
+      - "8443:8443/tcp"
+      - "8045:8045"
+
 # mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8

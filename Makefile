@@ -45,12 +45,27 @@ run-mm-replicas:
 	@docker-compose up -d mattermost mattermost-2
 	@echo "Should be up and running. Go crazy."
 
+run-rtcd:
+	@echo "Starting RTCD..."
+	@docker-compose up -d mattermost-rtcd
+	@docker exec -it cs-repro-mattermost mmctl config set PluginSettings.Plugins.com.mattermost.calls.rtcdserviceurl "http://mattermost-rtcd" --local
+	@docker exec -it cs-repro-mattermost mmctl plugin disable com.mattermost.calls --local
+	@docker exec -it cs-repro-mattermost mmctl plugin enable com.mattermost.calls --local
+
 run-all: run run-db-replicas run-mm-replicas
 
+start:
+	@echo "Starting the existing deployment..."
+	@docker-compose start
+	
 stop:
 	@echo "Stopping..."
 	@docker-compose stop
 	@echo "Done"
+
+stop-rtcd:
+	@echo "Stopping RTCD..."
+	@docker-compose stop mattermost-rtcd
 
 restart:
 	@docker-compose restart

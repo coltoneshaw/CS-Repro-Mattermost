@@ -48,7 +48,7 @@ run-mm-replicas:
 run-rtcd:
 	@echo "Starting RTCD..."
 	@docker-compose up -d mattermost-rtcd
-	@docker exec -it cs-repro-mattermost mmctl config set PluginSettings.Plugins.com.mattermost.calls.rtcdserviceurl "http://mattermost-rtcd" --local
+	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/rtcdConfig.json --local
 	@docker exec -it cs-repro-mattermost mmctl plugin disable com.mattermost.calls --local
 	@docker exec -it cs-repro-mattermost mmctl plugin enable com.mattermost.calls --local
 

@@ -2,7 +2,7 @@
   "PluginSettings": {
     "Plugins": {
         "com.mattermost.calls": {
-            "rtcdserviceurl": "http://mattermost-rtcd"
+            "rtcdserviceurl": "http://mattermost-rtcd:8045"
         }
     }
   }

@@ -3,7 +3,7 @@
           "Type": "console",
           "Format": "json",
           "Levels": [
-            {"ID": 10, "Name": "stdlog", "Stacktrace": false},
+                  {"ID": 10, "Name": "stdlog", "Stacktrace": false},
                   {"ID": 5, "Name": "debug", "Stacktrace": false},
                   {"ID": 4, "Name": "info", "Stacktrace": false, "color": 36},
                   {"ID": 3, "Name": "warn", "Stacktrace": false, "color": 33},

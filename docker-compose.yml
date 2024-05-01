@@ -68,7 +68,7 @@ services:
         condition: service_healthy
       mitmproxy:
         condition: service_started
-    image: mattermost/mattermost-enterprise-edition:release-9.6
+    image: mattermost/mattermost-enterprise-edition:release-9.7
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -207,7 +207,7 @@ services:
           condition: service_healthy
         mitmproxy:
           condition: service_started
-      image: mattermost/mattermost-enterprise-edition:release-9.6
+      image: mattermost/mattermost-enterprise-edition:release-9.7
       restart: unless-stopped
       security_opt:
         - no-new-privileges:true

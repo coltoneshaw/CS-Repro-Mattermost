@@ -307,3 +307,5 @@ By default this is setup to run on the built in Mattermost calls. You can enable
 All traffic is routed through the mitmproxy for monitoring. You can access this with `localhost:8181` in your browser.
 
 To disable this you can comment out the `HTTP_PROXY` and `HTTPS_PROXY` env vars on the Mattermost objects.
+
+<img src="./images/mitmproxy.jpg" alt="mitmproxy" title="mitmproxy" width="1000" />

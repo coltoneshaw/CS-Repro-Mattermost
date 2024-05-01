@@ -8,6 +8,7 @@ This is designed to be used as a reproduction of a standard customer production 
 - [Commands](#commands)
 - [Accounts](#accounts)
 - [Grafana](#grafana)
+- [mitmproxy](#mitmproxy)
 - [Guides](#guides)
   - [How to upgrade](#how-to-upgrade)
   - [How to Downgrade](#how-to-downgrade)
@@ -300,3 +301,9 @@ docker exec -it cs-repro-openldap ldapmodify \
 ## Calls
 
 By default this is setup to run on the built in Mattermost calls. You can enable the `rtcd` service by running `make run-rtcd`, which will start up `rtcd` and adjust the settings within Mattermost to work. 
+
+## mitmproxy
+
+All traffic is routed through the mitmproxy for monitoring. You can access this with `localhost:8181` in your browser.
+
+To disable this you can comment out the `HTTP_PROXY` and `HTTPS_PROXY` env vars on the Mattermost objects.

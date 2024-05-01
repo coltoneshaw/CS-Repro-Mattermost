@@ -1,7 +1,7 @@
 {
   "ServiceSettings": {
       "LicenseFileLocation": "config/license.mattermost-enterprise",
-      "AllowedUntrustedInternalConnections": "cs-repro-keycloak:8080 cs-repro-keycloak"
+      "AllowedUntrustedInternalConnections": "cs-repro-keycloak:8080 cs-repro-keycloak cs-repro-mitmproxy:8180 cs-repro-mitmproxy"
   },
   "LogSettings": {
       "EnableConsole": true,

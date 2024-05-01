@@ -66,6 +66,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      mitmproxy:
+        condition: service_started
     image: mattermost/mattermost-enterprise-edition:release-9.6
     restart: unless-stopped
     security_opt:
@@ -90,15 +92,24 @@ services:
       - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
       - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
       - ./files/mattermost/rtcdConfig.json:/mattermost/config/rtcdConfig.json:ro
+
+      ## Files are required for the mitmproxy on the box
+      - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem
+      - ./files/mitmproxy/mitmproxy-dhparam.pem:/etc/ssl/certs/mitmproxy-dhparam.pem
     environment:
+      - HTTP_PROXY=http://cs-repro-mitmproxy:8080
+      - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
       - MM_SqlSettings_DriverName=postgres
       - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
       - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
-      # - MM_SqlSettings_DriverName=mysql
-      # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
       - MM_ServiceSettings_EnableLocalMode=true
       - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
       - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+
+      ## mysql Settings
+      # - MM_SqlSettings_DriverName=mysql
+      # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
+
       ## Disable this to migrate your config to the database
 #      - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
   keycloak:
@@ -194,6 +205,8 @@ services:
       depends_on:
         postgres:
           condition: service_healthy
+        mitmproxy:
+          condition: service_started
       image: mattermost/mattermost-enterprise-edition:release-9.6
       restart: unless-stopped
       security_opt:
@@ -217,7 +230,13 @@ services:
         - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
         - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
         - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
+
+        ## Files are required for the mitmproxy on the box
+        - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem
+        - ./files/mitmproxy/mitmproxy-dhparam.pem:/etc/ssl/certs/mitmproxy-dhparam.pem
       environment:
+        - HTTP_PROXY=http://cs-repro-mitmproxy:8080
+        - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
         - MM_SqlSettings_DriverName=postgres
         - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
         - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
@@ -241,7 +260,16 @@ services:
       - "8443:8443/udp"
       - "8443:8443/tcp"
       - "8045:8045"
-
+  mitmproxy:
+    container_name: cs-repro-mitmproxy
+    image: mitmproxy/mitmproxy
+    command: mitmweb --web-host 0.0.0.0 --set confdir=/certs
+    volumes:
+      - ./files/mitmproxy:/certs
+    ports:
+      - "8180:8080"
+      - "8181:8081"
+    restart: unless-stopped
 # mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8
@@ -256,7 +284,7 @@ services:
   #     MYSQL_ROOT_PASSWORD: "mmuser_password"
   #   healthcheck:
   #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     timeout: 20s
+  #     timeout: 20supdat
   #     retries: 10
   #   ports:
   #     # <Port exposed> : <MySQL Port running inside container>

@@ -26,10 +26,11 @@ run:
 	@make run-core
 	@make setup-mattermost
 	@make echo-logins
+	@docker exec -it -u root cs-repro-mattermost /bin/bash update-ca-certificates
 
 run-core:
 	@echo "Starting the core services... hang in there."
-	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak
+	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak mitmproxy
 
 run-db-replicas:
 	@echo "Starting with replicas. Hang in there..."
@@ -37,12 +38,14 @@ run-db-replicas:
 	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/replicaConfig.json --local
 	@echo "Should be up and running. Go crazy."
 
+
 ## Need a way to modify the 
 run-mm-replicas:
 	@echo "Starting Mattermost replicas. Hang in there..."
 	@docker exec -it cs-repro-mattermost mmctl config set ClusterSettings.Enable true --local
 	@docker-compose down mattermost
 	@docker-compose up -d mattermost mattermost-2
+	@docker exec -it -u root cs-repro-mattermost-2 /bin/bash update-ca-certificates
 	@echo "Should be up and running. Go crazy."
 
 run-rtcd:

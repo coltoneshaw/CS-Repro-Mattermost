@@ -304,8 +304,18 @@ By default this is setup to run on the built in Mattermost calls. You can enable
 
 ## mitmproxy
 
-All traffic is routed through the mitmproxy for monitoring. You can access this with `localhost:8181` in your browser.
 
-To disable this you can comment out the `HTTP_PROXY` and `HTTPS_PROXY` env vars on the Mattermost objects.
+All traffic is routed through the mitmproxy for monitoring. You can access this with `localhost:8181` in your browser. To disable this you can comment out the `HTTP_PROXY` and `HTTPS_PROXY` env vars on the Mattermost objects.
+
+mitmproxy docs can be [found here](https://docs.mitmproxy.org/stable/)
+
 
 <img src="./images/mitmproxy.jpg" alt="mitmproxy" title="mitmproxy" width="1000" />
+
+Why would you want to do this? ([full feature list](https://docs.mitmproxy.org/stable/overview-features))
+
+- You can block Mattermost from making outgoing calls to see how the behavior works - [docs](https://docs.mitmproxy.org/stable/overview-features/#blocklist)
+- You can see what URLs are required for a Plugin
+- You can see exactly what's contained in the telemetry settings if a someone is curious.
+- You can modify outgoing requests to their destination to mimic behavior of bad data coming from mattermost. - [docs](https://docs.mitmproxy.org/stable/mitmproxytutorial-modifyrequests/)
+- You can control outgoing domains to map to your local service to reproduce responses - [docs](https://docs.mitmproxy.org/stable/overview-features/#map-local)

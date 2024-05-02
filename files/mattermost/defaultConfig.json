@@ -1,143 +1,399 @@
 {
-  "ServiceSettings": {
-      "LicenseFileLocation": "config/license.mattermost-enterprise",
-      "AllowedUntrustedInternalConnections": "cs-repro-keycloak:8080 cs-repro-keycloak cs-repro-mitmproxy:8180 cs-repro-mitmproxy"
-  },
-  "LogSettings": {
-      "EnableConsole": true,
-      "ConsoleLevel": "DEBUG",
-      "ConsoleJson": true,
-      "EnableColor": false,
-      "EnableFile": true,
-      "FileLevel": "DEBUG",
-      "FileJson": true,
-      "FileLocation": "",
-      "EnableWebhookDebugging": true,
-      "EnableDiagnostics": true,
-      "EnableSentry": true,
-      "AdvancedLoggingConfig": "./advancedLogging.json"
-  },
-  "ExperimentalAuditSettings": {
-      "FileEnabled": false,
-      "FileName": "",
-      "FileMaxSizeMB": 100,
-      "FileMaxAgeDays": 0,
-      "FileMaxBackups": 0,
-      "FileCompress": false,
-      "FileMaxQueueSize": 1000,
-      "AdvancedLoggingConfig": "./advancedLogging.json"
-  },
-  "NotificationLogSettings": {
-      "EnableConsole": true,
-      "ConsoleLevel": "DEBUG",
-      "ConsoleJson": true,
-      "EnableColor": false,
-      "EnableFile": true,
-      "FileLevel": "INFO",
-      "FileJson": true,
-      "FileLocation": "",
-      "AdvancedLoggingConfig": "./advancedLogging.json"
-  },
-  "LdapSettings": {
-      "Enable": true,
-      "EnableSync": true,
-      "LdapServer": "openldap",
-      "LdapPort": 10389,
-      "ConnectionSecurity": "",
-      "BaseDN": "dc=planetexpress,dc=com",
-      "BindUsername": "cn=admin,dc=planetexpress,dc=com",
-      "BindPassword": "GoodNewsEveryone",
-      "UserFilter": "(objectClass=Person)",
-      "GroupFilter": "(objectClass=Group)",
-      "GuestFilter": "",
-      "EnableAdminFilter": true,
-      "AdminFilter": "(memberof=cn=admin_staff,ou=people,dc=planetexpress,dc=com)",
-      "GroupDisplayNameAttribute": "cn",
-      "GroupIdAttribute": "cn",
-      "FirstNameAttribute": "givenName",
-      "LastNameAttribute": "sn",
-      "EmailAttribute": "mail",
-      "UsernameAttribute": "uid",
-      "NicknameAttribute": "",
-      "IdAttribute": "uid",
-      "PositionAttribute": "",
-      "LoginIdAttribute": "uid",
-      "PictureAttribute": "jpegPhoto",
-      "SyncIntervalMinutes": 60,
-      "SkipCertificateVerification": false,
-      "PublicCertificateFile": "",
-      "PrivateKeyFile": "",
-      "QueryTimeout": 60,
-      "MaxPageSize": 0,
-      "LoginFieldName": "",
-      "LoginButtonColor": "#0000",
-      "LoginButtonBorderColor": "#2389D7",
-      "LoginButtonTextColor": "#2389D7",
-      "Trace": true
-  },
-  "SamlSettings": {
-      "Enable": true,
-      "EnableSyncWithLdap": true,
-      "EnableSyncWithLdapIncludeAuth": true,
-      "IgnoreGuestsLdapSync": false,
-      "Verify": false,
-      "Encrypt": false,
-      "SignRequest": false,
-      "IdpURL": "http://localhost:8080/realms/master/protocol/saml",
-      "IdpDescriptorURL": "http://localhost:8080/realms/master",
-      "IdpMetadataURL": "http://cs-repro-keycloak:8080/realms/master/protocol/saml/descriptor",
-      "ServiceProviderIdentifier": "mattermost",
-      "AssertionConsumerServiceURL": "http://localhost:8065/login/sso/saml",
-      "SignatureAlgorithm": "RSAwithSHA1",
-      "CanonicalAlgorithm": "Canonical1.0",
-      "ScopingIDPProviderId": "",
-      "ScopingIDPName": "",
-      "IdpCertificateFile": "samlCert.crt",
-      "PublicCertificateFile": "",
-      "PrivateKeyFile": "",
-      "IdAttribute": "id",
-      "GuestAttribute": "",
-      "EnableAdminAttribute": false,
-      "AdminAttribute": "",
-      "FirstNameAttribute": "",
-      "LastNameAttribute": "",
-      "EmailAttribute": "email",
-      "UsernameAttribute": "username",
-      "NicknameAttribute": "",
-      "LocaleAttribute": "",
-      "PositionAttribute": "",
-      "LoginButtonText": "keycloak",
-      "LoginButtonColor": "#34a28b",
-      "LoginButtonBorderColor": "#2389D7",
-      "LoginButtonTextColor": "#ffffff"
-  },
-  "MetricsSettings": {
-      "Enable": true,
-      "BlockProfileRate": 0,
-      "ListenAddress": ":8067"
-  },
-  "ElasticsearchSettings": {
-      "ConnectionURL": "http://cs-repro-elasticsearch:9200",
-      "EnableIndexing": true,
-      "EnableSearching": true,
-      "EnableAutocomplete": true,
-      "Sniff": true,
-      "PostIndexReplicas": 1,
-      "PostIndexShards": 1,
-      "ChannelIndexReplicas": 1,
-      "ChannelIndexShards": 1,
-      "UserIndexReplicas": 1,
-      "UserIndexShards": 1,
-      "AggregatePostsAfterDays": 365,
-      "PostsAggregatorJobStartTime": "03:00",
-      "IndexPrefix": ""
-  },
-  "PluginSettings": {
-      "Enable": true,
-      "EnableUploads": true
-  },
-  "ClusterSettings": {
-    "ClusterName": "mattermost",
-    "ReadOnlyConfig": false
-  }
+    "ServiceSettings": {
+        "LicenseFileLocation": "config/license.mattermost-enterprise",
+        "AllowedUntrustedInternalConnections": "cs-repro-keycloak:8080 cs-repro-keycloak cs-repro-mitmproxy:8180 cs-repro-mitmproxy"
+    },
+    "LogSettings": {
+        "EnableConsole": true,
+        "ConsoleLevel": "DEBUG",
+        "ConsoleJson": true,
+        "EnableColor": false,
+        "EnableFile": true,
+        "FileLevel": "DEBUG",
+        "FileJson": true,
+        "FileLocation": "",
+        "EnableWebhookDebugging": true,
+        "EnableDiagnostics": true,
+        "EnableSentry": true,
+        "AdvancedLoggingJSON": {
+            "console-log": {
+                "Type": "console",
+                "Format": "json",
+                "Levels": [
+                    {
+                        "ID": 10,
+                        "Name": "stdlog",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 5,
+                        "Name": "debug",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 4,
+                        "Name": "info",
+                        "Stacktrace": false,
+                        "color": 36
+                    },
+                    {
+                        "ID": 3,
+                        "Name": "warn",
+                        "Stacktrace": false,
+                        "color": 33
+                    },
+                    {
+                        "ID": 2,
+                        "Name": "error",
+                        "Stacktrace": true,
+                        "color": 31
+                    },
+                    {
+                        "ID": 1,
+                        "Name": "fatal",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 0,
+                        "Name": "panic",
+                        "Stacktrace": true
+                    }
+                ],
+                "Options": {
+                    "Out": "stdout"
+                },
+                "MaxQueueSize": 1000
+            },
+            "file-log": {
+                "Type": "file",
+                "Format": "json",
+                "Levels": [
+                    {
+                        "ID": 10,
+                        "Name": "stdlog",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 5,
+                        "Name": "debug",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 4,
+                        "Name": "info",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 3,
+                        "Name": "warn",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 2,
+                        "Name": "error",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 1,
+                        "Name": "fatal",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 0,
+                        "Name": "panic",
+                        "Stacktrace": true
+                    }
+                ],
+                "Options": {
+                    "Compress": true,
+                    "Filename": "./logs/advancedLogs.log",
+                    "MaxAgeDays": 15,
+                    "MaxBackups": 3,
+                    "MaxSizeMB": 100
+                },
+                "MaxQueueSize": 1000
+            },
+            "ldap_logs": {
+                "Type": "file",
+                "Format": "json",
+                "Levels": [
+                    {
+                        "ID": 140,
+                        "Name": "LDAPError",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 141,
+                        "Name": "LDAPWarn",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 142,
+                        "Name": "LDAPInfo",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 143,
+                        "Name": "LDAPDebug",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 144,
+                        "Name": "LDAPTrace",
+                        "Stacktrace": true
+                    }
+                ],
+                "Options": {
+                    "Compress": true,
+                    "Filename": "./logs/advancedLdapLogs.log",
+                    "MaxAgeDays": 15,
+                    "MaxBackups": 3,
+                    "MaxSizeMB": 100
+                },
+                "MaxQueueSize": 1000
+            }
+        },
+        "AdvancedLoggingConfig": ""
+    },
+    "ExperimentalAuditSettings": {
+        "FileEnabled": false,
+        "FileName": "",
+        "FileMaxSizeMB": 100,
+        "FileMaxAgeDays": 0,
+        "FileMaxBackups": 0,
+        "FileCompress": false,
+        "FileMaxQueueSize": 1000,
+        "AdvancedLoggingJSON": {
+            "audit_logs": {
+                "Type": "file",
+                "Format": "json",
+                "Levels": [
+                    { "id": 100,  "name": "audit-api" },
+                    { "id": 101, "name": "audit-content"  },
+                    { "id": 102, "name": "audit-permissions"  },
+                    { "id": 103,  "name": "audit-cli" }
+                ],
+                "Options": {
+                    "Compress": true,
+                    "Filename": "./logs/advancedAudit.log",
+                    "MaxAgeDays": 0,
+                    "MaxBackups": 0,
+                    "MaxSizeMB": 200
+                },
+                "MaxQueueSize": 1000
+            }
+        },
+        "AdvancedLoggingConfig": ""
+    },
+    "NotificationLogSettings": {
+        "EnableConsole": true,
+        "ConsoleLevel": "DEBUG",
+        "ConsoleJson": true,
+        "EnableColor": false,
+        "EnableFile": true,
+        "FileLevel": "INFO",
+        "FileJson": true,
+        "FileLocation": "",
+        "AdvancedLoggingJSON": {
+            "console-log": {
+                "Type": "console",
+                "Format": "json",
+                "Levels": [
+                    {
+                        "ID": 10,
+                        "Name": "stdlog",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 5,
+                        "Name": "debug",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 4,
+                        "Name": "info",
+                        "Stacktrace": false,
+                        "color": 36
+                    },
+                    {
+                        "ID": 3,
+                        "Name": "warn",
+                        "Stacktrace": false,
+                        "color": 33
+                    },
+                    {
+                        "ID": 2,
+                        "Name": "error",
+                        "Stacktrace": true,
+                        "color": 31
+                    },
+                    {
+                        "ID": 1,
+                        "Name": "fatal",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 0,
+                        "Name": "panic",
+                        "Stacktrace": true
+                    }
+                ],
+                "Options": {
+                    "Out": "stdout"
+                },
+                "MaxQueueSize": 1000
+            },
+            "file-log": {
+                "Type": "file",
+                "Format": "json",
+                "Levels": [
+                    {
+                        "ID": 10,
+                        "Name": "stdlog",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 5,
+                        "Name": "debug",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 4,
+                        "Name": "info",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 3,
+                        "Name": "warn",
+                        "Stacktrace": false
+                    },
+                    {
+                        "ID": 2,
+                        "Name": "error",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 1,
+                        "Name": "fatal",
+                        "Stacktrace": true
+                    },
+                    {
+                        "ID": 0,
+                        "Name": "panic",
+                        "Stacktrace": true
+                    }
+                ],
+                "Options": {
+                    "Compress": true,
+                    "Filename": "./logs/advancedNotificationLogs.log",
+                    "MaxAgeDays": 15,
+                    "MaxBackups": 3,
+                    "MaxSizeMB": 100
+                },
+                "MaxQueueSize": 1000
+            }
+        }
+    },
+    "LdapSettings": {
+        "Enable": true,
+        "EnableSync": true,
+        "LdapServer": "openldap",
+        "LdapPort": 10389,
+        "ConnectionSecurity": "",
+        "BaseDN": "dc=planetexpress,dc=com",
+        "BindUsername": "cn=admin,dc=planetexpress,dc=com",
+        "BindPassword": "GoodNewsEveryone",
+        "UserFilter": "(objectClass=Person)",
+        "GroupFilter": "(objectClass=Group)",
+        "GuestFilter": "",
+        "EnableAdminFilter": true,
+        "AdminFilter": "(memberof=cn=admin_staff,ou=people,dc=planetexpress,dc=com)",
+        "GroupDisplayNameAttribute": "cn",
+        "GroupIdAttribute": "cn",
+        "FirstNameAttribute": "givenName",
+        "LastNameAttribute": "sn",
+        "EmailAttribute": "mail",
+        "UsernameAttribute": "uid",
+        "NicknameAttribute": "",
+        "IdAttribute": "uid",
+        "PositionAttribute": "",
+        "LoginIdAttribute": "uid",
+        "PictureAttribute": "jpegPhoto",
+        "SyncIntervalMinutes": 60,
+        "SkipCertificateVerification": false,
+        "PublicCertificateFile": "",
+        "PrivateKeyFile": "",
+        "QueryTimeout": 60,
+        "MaxPageSize": 0,
+        "LoginFieldName": "",
+        "LoginButtonColor": "#0000",
+        "LoginButtonBorderColor": "#2389D7",
+        "LoginButtonTextColor": "#2389D7",
+        "Trace": false
+    },
+    "SamlSettings": {
+        "Enable": true,
+        "EnableSyncWithLdap": true,
+        "EnableSyncWithLdapIncludeAuth": true,
+        "IgnoreGuestsLdapSync": false,
+        "Verify": false,
+        "Encrypt": false,
+        "SignRequest": false,
+        "IdpURL": "http://localhost:8080/realms/master/protocol/saml",
+        "IdpDescriptorURL": "http://localhost:8080/realms/master",
+        "IdpMetadataURL": "http://cs-repro-keycloak:8080/realms/master/protocol/saml/descriptor",
+        "ServiceProviderIdentifier": "mattermost",
+        "AssertionConsumerServiceURL": "http://localhost:8065/login/sso/saml",
+        "SignatureAlgorithm": "RSAwithSHA1",
+        "CanonicalAlgorithm": "Canonical1.0",
+        "ScopingIDPProviderId": "",
+        "ScopingIDPName": "",
+        "IdpCertificateFile": "samlCert.crt",
+        "PublicCertificateFile": "",
+        "PrivateKeyFile": "",
+        "IdAttribute": "id",
+        "GuestAttribute": "",
+        "EnableAdminAttribute": false,
+        "AdminAttribute": "",
+        "FirstNameAttribute": "",
+        "LastNameAttribute": "",
+        "EmailAttribute": "email",
+        "UsernameAttribute": "username",
+        "NicknameAttribute": "",
+        "LocaleAttribute": "",
+        "PositionAttribute": "",
+        "LoginButtonText": "keycloak",
+        "LoginButtonColor": "#34a28b",
+        "LoginButtonBorderColor": "#2389D7",
+        "LoginButtonTextColor": "#ffffff"
+    },
+    "MetricsSettings": {
+        "Enable": true,
+        "BlockProfileRate": 0,
+        "ListenAddress": ":8067"
+    },
+    "ElasticsearchSettings": {
+        "ConnectionURL": "http://cs-repro-elasticsearch:9200",
+        "EnableIndexing": true,
+        "EnableSearching": true,
+        "EnableAutocomplete": true,
+        "Sniff": true,
+        "PostIndexReplicas": 1,
+        "PostIndexShards": 1,
+        "ChannelIndexReplicas": 1,
+        "ChannelIndexShards": 1,
+        "UserIndexReplicas": 1,
+        "UserIndexShards": 1,
+        "AggregatePostsAfterDays": 365,
+        "PostsAggregatorJobStartTime": "03:00",
+        "IndexPrefix": ""
+    },
+    "PluginSettings": {
+        "Enable": true,
+        "EnableUploads": true
+    },
+    "ClusterSettings": {
+        "ClusterName": "mattermost",
+        "ReadOnlyConfig": false
+    }
 }

@@ -88,7 +88,6 @@ services:
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
       - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
       - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
-      - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
       - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
       - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
       - ./files/mattermost/rtcdConfig.json:/mattermost/config/rtcdConfig.json:ro
@@ -227,7 +226,6 @@ services:
         - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
         - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
         - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
-        - ./files/mattermost/advancedLogging.json:/mattermost/config/advancedLogging.json:ro
         - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
         - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
 
@@ -263,7 +261,7 @@ services:
   mitmproxy:
     container_name: cs-repro-mitmproxy
     image: mitmproxy/mitmproxy
-    command: mitmweb --web-host 0.0.0.0 --set confdir=/certs
+    command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
     volumes:
       - ./files/mitmproxy:/certs
     ports:

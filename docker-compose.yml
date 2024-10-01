@@ -68,7 +68,7 @@ services:
         condition: service_healthy
       mitmproxy:
         condition: service_started
-    image: mattermost/mattermost-enterprise-edition:release-9.7
+    image: mattermost/mattermost-enterprise-edition:release-9.11
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -86,18 +86,13 @@ services:
       - ./volumes/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
-      - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
-      - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
-      - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
-      - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
-      - ./files/mattermost/rtcdConfig.json:/mattermost/config/rtcdConfig.json:ro
 
       ## Files are required for the mitmproxy on the box
       - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem
       - ./files/mitmproxy/mitmproxy-dhparam.pem:/etc/ssl/certs/mitmproxy-dhparam.pem
     environment:
-      - HTTP_PROXY=http://cs-repro-mitmproxy:8080
-      - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
+      # - HTTP_PROXY=http://cs-repro-mitmproxy:8080
+      # - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
       - MM_SqlSettings_DriverName=postgres
       - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
       - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
@@ -224,10 +219,10 @@ services:
         - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
         - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
         - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
-        - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
-        - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
-        - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
-        - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
+        # - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
+        # - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
+        # - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
+        # - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
 
         ## Files are required for the mitmproxy on the box
         - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem

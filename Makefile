@@ -6,6 +6,12 @@ logs:
 	@echo "Done"
 
 setup-mattermost:
+	@cp ./files/mattermost/defaultConfig.json ./volumes/mattermost/config
+	@cp ./files/mattermost/replicaConfig.json ./volumes/mattermost/config
+	@cp ./files/mattermost/rtcdConfig.json ./volumes/mattermost/config
+	@cp ./files/mattermost/samlCert.crt ./volumes/mattermost/config
+	@cp ./license.mattermost ./volumes/mattermost/config/license.mattermost-enterprise
+
 	@./scripts/mattermost.sh setup
 
 check-mattermost:
@@ -44,6 +50,11 @@ run-mm-replicas:
 	@echo "Starting Mattermost replicas. Hang in there..."
 	@docker exec -it cs-repro-mattermost mmctl config set ClusterSettings.Enable true --local
 	@docker-compose down mattermost
+	@cp ./files/mattermost/defaultConfig.json ./volumes/mattermost_2/config
+	@cp ./files/mattermost/replicaConfig.json ./volumes/mattermost_2/config
+	@cp ./files/mattermost/rtcdConfig.json ./volumes/mattermost_2/config
+	@cp ./files/mattermost/samlCert.crt ./volumes/mattermost_2/config
+	@cp ./license.mattermost ./volumes/mattermost/mattermost_2/license.mattermost-enterprise
 	@docker-compose up -d mattermost mattermost-2
 	@docker exec -it -u root cs-repro-mattermost-2 /bin/bash update-ca-certificates
 	@echo "Should be up and running. Go crazy."

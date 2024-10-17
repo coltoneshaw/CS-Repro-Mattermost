@@ -2,7 +2,7 @@
 	
 logs:
 	@echo "Following logs..."
-	@docker-compose logs --follow
+	@docker compose logs --follow
 	@echo "Done"
 
 setup-mattermost:
@@ -36,11 +36,11 @@ run:
 
 run-core:
 	@echo "Starting the core services... hang in there."
-	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak mitmproxy
+	@docker compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak mitmproxy
 
 run-db-replicas:
 	@echo "Starting with replicas. Hang in there..."
-	@docker-compose up -d postgres-replica-1 postgres-replica-2
+	@docker compose up -d postgres-replica-1 postgres-replica-2
 	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/replicaConfig.json --local
 	@echo "Should be up and running. Go crazy."
 
@@ -49,19 +49,19 @@ run-db-replicas:
 run-mm-replicas:
 	@echo "Starting Mattermost replicas. Hang in there..."
 	@docker exec -it cs-repro-mattermost mmctl config set ClusterSettings.Enable true --local
-	@docker-compose down mattermost
+	@docker compose down mattermost
 	@cp ./files/mattermost/defaultConfig.json ./volumes/mattermost_2/config
 	@cp ./files/mattermost/replicaConfig.json ./volumes/mattermost_2/config
 	@cp ./files/mattermost/rtcdConfig.json ./volumes/mattermost_2/config
 	@cp ./files/mattermost/samlCert.crt ./volumes/mattermost_2/config
 	@cp ./license.mattermost ./volumes/mattermost/mattermost_2/license.mattermost-enterprise
-	@docker-compose up -d mattermost mattermost-2
+	@docker compose up -d mattermost mattermost-2
 	@docker exec -it -u root cs-repro-mattermost-2 /bin/bash update-ca-certificates
 	@echo "Should be up and running. Go crazy."
 
 run-rtcd:
 	@echo "Starting RTCD..."
-	@docker-compose up -d mattermost-rtcd
+	@docker compose up -d mattermost-rtcd
 	@docker exec -it cs-repro-mattermost mmctl config patch /mattermost/config/rtcdConfig.json --local
 	@docker exec -it cs-repro-mattermost mmctl plugin disable com.mattermost.calls --local
 	@docker exec -it cs-repro-mattermost mmctl plugin enable com.mattermost.calls --local
@@ -70,19 +70,19 @@ run-all: run run-db-replicas run-mm-replicas
 
 start:
 	@echo "Starting the existing deployment..."
-	@docker-compose start
+	@docker compose start
 	
 stop:
 	@echo "Stopping..."
-	@docker-compose stop
+	@docker compose stop
 	@echo "Done"
 
 stop-rtcd:
 	@echo "Stopping RTCD..."
-	@docker-compose stop mattermost-rtcd
+	@docker compose stop mattermost-rtcd
 
 restart:
-	@docker-compose restart
+	@docker compose restart
 	@make check-mattermost
 
 restart-mattermost:
@@ -104,12 +104,12 @@ downgrade:
 	@docker stop cs-repro-postgres || true && docker rm cs-repro-postgres || true
 	rm -rf ./volumes/mattermost
 	rm -rf ./volumes/db
-	docker-compose up -d
+	docker compose up -d
 	@make setup-mattermost
 
 delete-dockerfiles:
 	@echo "Deleting data..."
-	@docker-compose rm
+	@docker compose rm
 	@rm -rf ./volumes
 	@rm -rf ./files/postgres/replica/replica_*
 	@echo "Done"
@@ -118,10 +118,10 @@ delete-data: stop delete-dockerfiles
 
 nuke: 
 	@echo "Nuking Docker..."
-	@docker-compose down --volumes --remove-orphans
+	@docker compose down --volumes --remove-orphans
 	@make delete-data
 
 nuke-rmi: 
 	@echo "Nuking Docker with images..."
-	@docker-compose down --rmi all --volumes --remove-orphans
+	@docker compose down --rmi all --volumes --remove-orphans
 	@make delete-data

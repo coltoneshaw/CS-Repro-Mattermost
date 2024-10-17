@@ -9,7 +9,7 @@ setup-mattermost:
 	@cp ./files/mattermost/defaultConfig.json ./volumes/mattermost/config
 	@cp ./files/mattermost/replicaConfig.json ./volumes/mattermost/config
 	@cp ./files/mattermost/rtcdConfig.json ./volumes/mattermost/config
-	@cp ./files/mattermost/samlCert.crt ./volumes/mattermost/config
+	@cp ./files/mattermost/saml-cert.crt ./volumes/mattermost/config
 	@cp ./license.mattermost ./volumes/mattermost/config/license.mattermost-enterprise
 
 	@./scripts/mattermost.sh setup

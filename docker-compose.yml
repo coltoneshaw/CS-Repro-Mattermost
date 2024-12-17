@@ -46,6 +46,34 @@ services:
     volumes:
       - ./files/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./volumes/prometheus:/prometheus
+  loki:
+    container_name: cs-repro-loki
+    platform: linux/amd64
+    image: grafana/loki:3.0.0
+    restart: unless-stopped
+    ports:
+      - 3100:3100
+    volumes:
+      - ./files/loki:/etc/loki
+      - shared-data:/shared # Mount the shared volume
+      - logs-node-1:/logs
+      - logs-node-2:/logs
+    command: -config.file=/etc/loki/loki-config.yaml
+  promtail:
+    container_name: cs-repro-promtail
+    platform: linux/amd64
+    image: grafana/promtail:3.0.0
+    restart: unless-stopped
+    ports:
+      - 9080:9080
+    volumes:
+      - ./files/promtail:/etc/promtail
+      - shared-data:/shared # Mount the shared volume
+      - logs-node-1:/logs-node-1
+      - logs-node-2:/logs-node-2
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
   grafana:
     container_name: cs-repro-grafana
     image: grafana/grafana:10.0.4
@@ -68,7 +96,7 @@ services:
         condition: service_healthy
       mitmproxy:
         condition: service_started
-    image: mattermost/mattermost-enterprise-edition:release-9.11
+    image: mattermost/mattermost-enterprise-edition:10.3
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -82,7 +110,7 @@ services:
     volumes:
       - ./volumes/mattermost/config:/mattermost/config:rw
       - ./volumes/mattermost/data:/mattermost/data:rw
-      - ./volumes/mattermost/logs:/mattermost/logs:rw
+      - logs-node-1:/mattermost/logs:rw
       - ./volumes/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -99,6 +127,7 @@ services:
       - MM_ServiceSettings_EnableLocalMode=true
       - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
       - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+      - MM_LogSettings_Directory=
 
       ## mysql Settings
       # - MM_SqlSettings_DriverName=mysql
@@ -215,7 +244,7 @@ services:
       volumes:
         - ./volumes/mattermost/config:/mattermost/config:rw
         - ./volumes/mattermost/data:/mattermost/data:rw
-        - ./volumes/mattermost_2/logs:/mattermost/logs:rw
+        - logs-node-2:/mattermost-1/logs:rw
         - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
         - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
         - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -257,12 +286,13 @@ services:
     container_name: cs-repro-mitmproxy
     image: mitmproxy/mitmproxy
     command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
-    volumes:
-      - ./files/mitmproxy:/certs
-    ports:
-      - "8180:8080"
-      - "8181:8081"
-    restart: unless-stopped
+volumes: 
+  shared-data:
+    driver: local
+  logs-node-1:
+    driver: local
+  logs-node-2:
+    driver: local
 # mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8

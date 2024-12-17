@@ -9,6 +9,8 @@ logins () {
   echo "    - All Mattermost Grafana charts are setup."
   echo "    - For more info https://github.com/coltoneshaw/CS-Repro-Mattermost#use-grafana"
   echo "- Prometheus: http://localhost:9090"
+  echo "- Loki: http://localhost:3100/ready"
+  echo "- Promtail: http://localhost:9080"
   echo "- PostgreSQL"  "localhost:5432" with 'mmuser' / 'mmuser_password'
   echo
   echo ===========================================================

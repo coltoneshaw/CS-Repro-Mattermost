@@ -36,7 +36,7 @@ run:
 
 run-core:
 	@echo "Starting the core services... hang in there."
-	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak mitmproxy
+	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak loki promtail
 
 run-db-replicas:
 	@echo "Starting with replicas. Hang in there..."

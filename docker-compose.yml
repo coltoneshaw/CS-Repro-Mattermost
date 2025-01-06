@@ -48,27 +48,23 @@ services:
       - ./volumes/prometheus:/prometheus
   loki:
     container_name: cs-repro-loki
-    platform: linux/amd64
-    image: grafana/loki:3.0.0
+    image: grafana/loki:3.2.2
     restart: unless-stopped
     ports:
       - 3100:3100
     volumes:
       - ./files/loki:/etc/loki
-      - shared-data:/shared # Mount the shared volume
       - logs-node-1:/logs
       - logs-node-2:/logs
     command: -config.file=/etc/loki/loki-config.yaml
   promtail:
     container_name: cs-repro-promtail
-    platform: linux/amd64
-    image: grafana/promtail:3.0.0
+    image: grafana/promtail:3.2.2
     restart: unless-stopped
     ports:
       - 9080:9080
     volumes:
       - ./files/promtail:/etc/promtail
-      - shared-data:/shared # Mount the shared volume
       - logs-node-1:/logs-node-1
       - logs-node-2:/logs-node-2
     command: -config.file=/etc/promtail/promtail-config.yaml
@@ -138,8 +134,7 @@ services:
   keycloak:
     container_name: cs-repro-keycloak
     restart: unless-stopped
-    platform: linux/amd64
-    image: quay.io/keycloak/keycloak:18.0.0
+    image: quay.io/keycloak/keycloak:18.0
     volumes:
       - ./volumes/keycloak:/opt/keycloak/data:rw
     environment:
@@ -287,8 +282,6 @@ services:
     image: mitmproxy/mitmproxy
     command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
 volumes: 
-  shared-data:
-    driver: local
   logs-node-1:
     driver: local
   logs-node-2:

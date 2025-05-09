@@ -36,7 +36,7 @@ run:
 
 run-core:
 	@echo "Starting the core services... hang in there."
-	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak mitmproxy
+	@docker-compose up -d postgres openldap prometheus grafana elasticsearch mattermost keycloak loki promtail
 
 run-db-replicas:
 	@echo "Starting with replicas. Hang in there..."
@@ -92,6 +92,14 @@ restart-mattermost:
 	@echo "Starting Mattermost container"
 	@docker start cs-repro-mattermost
 	@make check-mattermost
+
+restart-grafana:
+	@echo "Restarting Grafana container"
+	@docker stop cs-repro-grafana
+	@wait
+	@echo "Starting Grafana container"
+	@docker start cs-repro-grafana
+	@echo "Grafana restarted"
 
 reset:
 	@echo "Resetting..."

@@ -46,6 +46,30 @@ services:
     volumes:
       - ./files/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./volumes/prometheus:/prometheus
+  loki:
+    container_name: cs-repro-loki
+    image: grafana/loki:3.2.2
+    restart: unless-stopped
+    ports:
+      - 3100:3100
+    volumes:
+      - ./files/loki:/etc/loki
+      - ./volumes/logs-node-1:/logs/node-1
+      - ./volumes/logs-node-2:/logs/node-2
+    command: -config.file=/etc/loki/loki-config.yaml
+  promtail:
+    container_name: cs-repro-promtail
+    image: grafana/promtail:3.2.2
+    restart: unless-stopped
+    ports:
+      - 9080:9080
+    volumes:
+      - ./files/promtail:/etc/promtail
+      - ./volumes/logs-node-1:/logs-node-1
+      - ./volumes/logs-node-2:/logs-node-2
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
   grafana:
     container_name: cs-repro-grafana
     image: grafana/grafana:10.0.4
@@ -68,7 +92,7 @@ services:
         condition: service_healthy
       mitmproxy:
         condition: service_started
-    image: mattermost/mattermost-enterprise-edition:release-9.11
+    image: mattermost/mattermost-enterprise-edition:10.7
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -82,7 +106,7 @@ services:
     volumes:
       - ./volumes/mattermost/config:/mattermost/config:rw
       - ./volumes/mattermost/data:/mattermost/data:rw
-      - ./volumes/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/logs-node-1:/mattermost/logs:rw
       - ./volumes/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -99,6 +123,7 @@ services:
       - MM_ServiceSettings_EnableLocalMode=true
       - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
       - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+      - MM_LogSettings_Directory=
 
       ## mysql Settings
       # - MM_SqlSettings_DriverName=mysql
@@ -109,8 +134,7 @@ services:
   keycloak:
     container_name: cs-repro-keycloak
     restart: unless-stopped
-    platform: linux/amd64
-    image: quay.io/keycloak/keycloak:18.0.0
+    image: quay.io/keycloak/keycloak:18.0
     volumes:
       - ./volumes/keycloak:/opt/keycloak/data:rw
     environment:
@@ -201,7 +225,7 @@ services:
           condition: service_healthy
         mitmproxy:
           condition: service_started
-      image: mattermost/mattermost-enterprise-edition:release-9.7
+      image: mattermost/mattermost-enterprise-edition:10.7
       restart: unless-stopped
       security_opt:
         - no-new-privileges:true
@@ -215,7 +239,7 @@ services:
       volumes:
         - ./volumes/mattermost/config:/mattermost/config:rw
         - ./volumes/mattermost/data:/mattermost/data:rw
-        - ./volumes/mattermost_2/logs:/mattermost/logs:rw
+        - ./volumes/logs-node-2:/mattermost-1/logs:rw
         - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
         - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
         - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -236,6 +260,7 @@ services:
         - MM_ServiceSettings_EnableLocalMode=true
         - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
         - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+        - MM_LogSettings_Directory=/mattermost/logs
   mattermost-rtcd:
     container_name: cs-repro-mattermost-rtcd
     platform: linux/amd64
@@ -257,12 +282,7 @@ services:
     container_name: cs-repro-mitmproxy
     image: mitmproxy/mitmproxy
     command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
-    volumes:
-      - ./files/mitmproxy:/certs
-    ports:
-      - "8180:8080"
-      - "8181:8081"
-    restart: unless-stopped
+# Named volumes section is removed since we're using host path mounts
 # mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8

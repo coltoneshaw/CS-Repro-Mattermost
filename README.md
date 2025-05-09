@@ -71,7 +71,7 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 - **`make run`**: Initializes the environment and creates the containers
 - **`make run-all`**: Spins up all environment containers with the database replicas and Mattermost HA.
 - You must run `make run` before running the below:
-  - **`make run-db-replica`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
+  - **`make run-db-replicas`**: Launches the environment with replicas. Ideal for adding replicas to an existing setup or initializing with replicas from the get-go.
   - **`make run-mm-replica`**: Launches an additional Mattermost node and enables HA.
   - **`make run-rtcd`**: Launches the RTCD service for Mattermost Calls and updates the config to use it correctly.
 - **`make backup-keycloak`**: Generates a backup of the current Keycloak setup in the files directory. Useful for infrequent backups.
@@ -79,6 +79,7 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 - **`make stop`**: Halts all running containers.
 - **`make restart`**: Restarts all Docker containers in the environment.
 - **`make restart-mattermost`**: Specifically restarts only the Mattermost containers for quick testing.
+- **`make restart-grafana`**: Specifically restarts only the Grafana container.
 - **`make reset`**: Cleans the volumes directory and reinitializes the environment to default settings.
 - **`make delete-data`**: Clears all data within volumes, effectively stopping Mattermost.
 - **`make nuke`**: Erases all configurations and data, sparing your personal data.
@@ -90,10 +91,10 @@ Additionally, the keycloak container can take up to 5 minutes to spin up. If it'
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-    You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+    You're just replacing the tag at the end, this one is `10.7` for example. It must be a version of Mattermost that exists on Docker.
 
     ```bash
-    mattermost/mattermost-enterprise-edition:release-7.7
+    mattermost/mattermost-enterprise-edition:10.7
     ```
 
 2. Run `make restart-mattermost`
@@ -106,10 +107,10 @@ Doing this will wipe anything you have in the database and any existing Mattermo
 
 1. Modify the line in the `docker-compose.yml` file to be the version you want
 
-    You're just replacing the tag at the end, this one is `7.7` for example. It must be a version of Mattermost that exists on Docker.
+    You're just replacing the tag at the end, this one is `10.7` for example. It must be a version of Mattermost that exists on Docker.
 
     ```bash
-    mattermost/mattermost-enterprise-edition:release-7.7
+    mattermost/mattermost-enterprise-edition:10.7
     ```
   
 2. Run `make downgrade`

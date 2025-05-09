@@ -822,6 +822,6 @@
   "timezone": "",
   "title": "Mattermost Enhanced Logs",
   "uid": "mattermost-logs",
-  "version": 9,
+  "version": 11,
   "weekStart": ""
 }

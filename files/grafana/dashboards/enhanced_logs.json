@@ -370,7 +370,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 5,
         "x": 12,
         "y": 20
       },
@@ -428,8 +428,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
+        "w": 7,
+        "x": 17,
         "y": 20
       },
       "id": 6,
@@ -535,7 +535,7 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 28
@@ -667,7 +667,7 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 28
@@ -761,7 +761,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "info",
             "warn",
@@ -822,6 +822,6 @@
   "timezone": "",
   "title": "Mattermost Enhanced Logs",
   "uid": "mattermost-logs",
-  "version": 11,
+  "version": 2,
   "weekStart": ""
 }

@@ -12,3 +12,8 @@ files/postgres/replica/replica_1_postgres.conf
 
 files/postgres/replica/replica_2.conf
 files/postgres/replica/replica_2_postgres.conf
+
+**/.claude/settings.local.json
+
+*_backup.json
+*.log

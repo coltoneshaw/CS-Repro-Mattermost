@@ -20,12 +20,12 @@ datasources:
      access: proxy
      url: http://loki:3100
      password:
-        user:
-        database:
-        isDefault: false
-        jsonData:
-           tlsAuth: false
-           tlsAuthWithCACert: false
-           httpMethod: "POST"
-        version: 1
-        editable: true
+     user:
+     database:
+     isDefault: false
+     jsonData:
+        tlsAuth: false
+        tlsAuthWithCACert: false
+        httpMethod: "POST"
+     version: 1
+     editable: true

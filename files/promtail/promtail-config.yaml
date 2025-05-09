@@ -23,5 +23,19 @@ scrape_configs:
     labels:
       job: mmlogs-2
       __path__: /logs-node-2/*.log
+- job_name: mmlogs-local-1
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: mmlogs-local-1
+      __path__: /logs-local-1/*.log
+- job_name: mmlogs-local-2
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: mmlogs-local-2
+      __path__: /logs-local-2/*.log
 
 

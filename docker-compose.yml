@@ -54,8 +54,8 @@ services:
       - 3100:3100
     volumes:
       - ./files/loki:/etc/loki
-      - logs-node-1:/logs
-      - logs-node-2:/logs
+      - ./volumes/logs-node-1:/logs/node-1
+      - ./volumes/logs-node-2:/logs/node-2
     command: -config.file=/etc/loki/loki-config.yaml
   promtail:
     container_name: cs-repro-promtail
@@ -65,8 +65,8 @@ services:
       - 9080:9080
     volumes:
       - ./files/promtail:/etc/promtail
-      - logs-node-1:/logs-node-1
-      - logs-node-2:/logs-node-2
+      - ./volumes/logs-node-1:/logs-node-1
+      - ./volumes/logs-node-2:/logs-node-2
     command: -config.file=/etc/promtail/promtail-config.yaml
     depends_on:
       - loki
@@ -106,7 +106,7 @@ services:
     volumes:
       - ./volumes/mattermost/config:/mattermost/config:rw
       - ./volumes/mattermost/data:/mattermost/data:rw
-      - logs-node-1:/mattermost/logs:rw
+      - ./volumes/logs-node-1:/mattermost/logs:rw
       - ./volumes/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -239,7 +239,7 @@ services:
       volumes:
         - ./volumes/mattermost/config:/mattermost/config:rw
         - ./volumes/mattermost/data:/mattermost/data:rw
-        - logs-node-2:/mattermost-1/logs:rw
+        - ./volumes/logs-node-2:/mattermost-1/logs:rw
         - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
         - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
         - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
@@ -260,6 +260,7 @@ services:
         - MM_ServiceSettings_EnableLocalMode=true
         - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
         - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+        - MM_LogSettings_Directory=/mattermost/logs
   mattermost-rtcd:
     container_name: cs-repro-mattermost-rtcd
     platform: linux/amd64
@@ -281,11 +282,7 @@ services:
     container_name: cs-repro-mitmproxy
     image: mitmproxy/mitmproxy
     command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
-volumes: 
-  logs-node-1:
-    driver: local
-  logs-node-2:
-    driver: local
+# Named volumes section is removed since we're using host path mounts
 # mysql:
   #   container_name: cs-repro-mysql
   #   image: mysql:8

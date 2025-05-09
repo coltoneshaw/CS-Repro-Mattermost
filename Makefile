@@ -93,6 +93,14 @@ restart-mattermost:
 	@docker start cs-repro-mattermost
 	@make check-mattermost
 
+restart-grafana:
+	@echo "Restarting Grafana container"
+	@docker stop cs-repro-grafana
+	@wait
+	@echo "Starting Grafana container"
+	@docker start cs-repro-grafana
+	@echo "Grafana restarted"
+
 reset:
 	@echo "Resetting..."
 	@make delete-data

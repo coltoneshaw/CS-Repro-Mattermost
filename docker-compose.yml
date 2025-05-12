@@ -54,20 +54,26 @@ services:
       - 3100:3100
     volumes:
       - ./files/loki:/etc/loki
-      - ./volumes/logs-node-1:/logs/node-1
-      - ./volumes/logs-node-2:/logs/node-2
+      - ./volumes/loki-data:/tmp/loki
     command: -config.file=/etc/loki/loki-config.yaml
-  promtail:
-    container_name: cs-repro-promtail
-    image: grafana/promtail:3.2.2
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/loki/api/v1/labels || exit 1"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
+  alloy:
+    container_name: cs-repro-alloy
+    image: grafana/alloy:latest
     restart: unless-stopped
     ports:
       - 9080:9080
+      - 9999:9999
     volumes:
-      - ./files/promtail:/etc/promtail
-      - ./volumes/logs-node-1:/logs-node-1
-      - ./volumes/logs-node-2:/logs-node-2
-    command: -config.file=/etc/promtail/promtail-config.yaml
+      - ./files/alloy:/etc/alloy:ro
+      - ./volumes/alloy/data:/var/lib/alloy/data:rw
+      - ./volumes/logs-node-1:/mattermost/logs:ro
+    command: run --server.http.listen-addr=0.0.0.0:9080 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     depends_on:
       - loki
   grafana:

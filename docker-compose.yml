@@ -57,7 +57,11 @@ services:
       - ./volumes/loki-data:/tmp/loki
     command: -config.file=/etc/loki/loki-config.yaml
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/loki/api/v1/labels || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3100/loki/api/v1/labels || exit 1",
+        ]
       interval: 20s
       timeout: 3s
       retries: 5
@@ -136,7 +140,7 @@ services:
       # - MM_SqlSettings_DataSource=mmuser:mmuser_password@tcp(mysql:3306)/mattermost?charset=utf8mb4,utf8&writeTimeout=30s
 
       ## Disable this to migrate your config to the database
-#      - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+  #      - MM_CONFIG=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
   keycloak:
     container_name: cs-repro-keycloak
     restart: unless-stopped
@@ -224,49 +228,49 @@ services:
     depends_on:
       - postgres
   mattermost-2:
-      platform: linux/amd64
-      container_name: cs-repro-mattermost-2
-      depends_on:
-        postgres:
-          condition: service_healthy
-        mitmproxy:
-          condition: service_started
-      image: mattermost/mattermost-enterprise-edition:10.7
-      restart: unless-stopped
-      security_opt:
-        - no-new-privileges:true
-      pids_limit: 200
-      read_only: false
-      ports:
-        - "8066:8065"
-        - "8068:8067"
-      tmpfs:
-        - /tmp
-      volumes:
-        - ./volumes/mattermost/config:/mattermost/config:rw
-        - ./volumes/mattermost/data:/mattermost/data:rw
-        - ./volumes/logs-node-2:/mattermost-1/logs:rw
-        - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
-        - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
-        - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
-        # - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
-        # - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
-        # - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
-        # - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
+    platform: linux/amd64
+    container_name: cs-repro-mattermost-2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mitmproxy:
+        condition: service_started
+    image: mattermost/mattermost-enterprise-edition:10.7
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    read_only: false
+    ports:
+      - "8066:8065"
+      - "8068:8067"
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./volumes/mattermost/config:/mattermost/config:rw
+      - ./volumes/mattermost/data:/mattermost/data:rw
+      - ./volumes/logs-node-2:/mattermost-1/logs:rw
+      - ./volumes/mattermost_2/plugins:/mattermost/plugins:rw
+      - ./volumes/mattermost_2/client/plugins:/mattermost/client/plugins:rw
+      - ./volumes/mattermost_2/bleve-indexes:/mattermost/bleve-indexes:rw
+      # - ./license.mattermost:/mattermost/config/license.mattermost-enterprise:ro
+      # - ./files/mattermost/samlCert.crt:/mattermost/config/saml-cert.crt
+      # - ./files/mattermost/defaultConfig.json:/mattermost/config/defaultConfig.json:ro
+      # - ./files/mattermost/replicaConfig.json:/mattermost/config/replicaConfig.json:ro
 
-        ## Files are required for the mitmproxy on the box
-        - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem
-        - ./files/mitmproxy/mitmproxy-dhparam.pem:/etc/ssl/certs/mitmproxy-dhparam.pem
-      environment:
-        - HTTP_PROXY=http://cs-repro-mitmproxy:8080
-        - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
-        - MM_SqlSettings_DriverName=postgres
-        - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
-        - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
-        - MM_ServiceSettings_EnableLocalMode=true
-        - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
-        - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
-        - MM_LogSettings_Directory=/mattermost/logs
+      ## Files are required for the mitmproxy on the box
+      - ./files/mitmproxy/mitmproxy-ca.pem:/etc/ssl/certs/mitmproxy-ca.pem
+      - ./files/mitmproxy/mitmproxy-dhparam.pem:/etc/ssl/certs/mitmproxy-dhparam.pem
+    environment:
+      - HTTP_PROXY=http://cs-repro-mitmproxy:8080
+      - HTTPS_PROXY=http://cs-repro-mitmproxy:8080
+      - MM_SqlSettings_DriverName=postgres
+      - MM_SqlSettings_DataSource=postgres://mmuser:mmuser_password@cs-repro-postgres:5432/mattermost?sslmode=disable&connect_timeout=10&binary_parameters=yes
+      - MM_SAMLSETTINGS_IDPCERTIFICATEFILE=/mattermost/config/saml-cert.crt
+      - MM_ServiceSettings_EnableLocalMode=true
+      - MM_ServiceSettings_LocalModeSocketLocation=/var/tmp/mattermost_local.socket
+      - MM_ServiceSettings_LicenseFileLocation=/mattermost/config/license.mattermost-enterprise
+      - MM_LogSettings_Directory=/mattermost/logs
   mattermost-rtcd:
     container_name: cs-repro-mattermost-rtcd
     platform: linux/amd64
@@ -290,28 +294,28 @@ services:
     command: mitmweb --web-host 0.0.0.0 --set confdir=/certs --mode transparent
 # Named volumes section is removed since we're using host path mounts
 # mysql:
-  #   container_name: cs-repro-mysql
-  #   image: mysql:8
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "mattermost"
-  #     # So you don't have to use root, but you can if you like
-  #     MYSQL_USER: "mmuser"
-  #     # You can use whatever password you like
-  #     MYSQL_PASSWORD: "mmuser_password"
-  #     # Password for root access
-  #     MYSQL_ROOT_PASSWORD: "mmuser_password"
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     timeout: 20supdat
-  #     retries: 10
-  #   ports:
-  #     # <Port exposed> : <MySQL Port running inside container>
-  #     - "3306:3306"
-  #   expose:
-  #     # Opens port 3306 on the container
-  #     - "3306"
-  #     # Where our data will be persisted
-  #   volumes:
-  #     - ./volumes/db/mysql:/var/lib/mysql
-   
+#   container_name: cs-repro-mysql
+#   image: mysql:8
+#   restart: always
+#   environment:
+#     MYSQL_DATABASE: "mattermost"
+#     # So you don't have to use root, but you can if you like
+#     MYSQL_USER: "mmuser"
+#     # You can use whatever password you like
+#     MYSQL_PASSWORD: "mmuser_password"
+#     # Password for root access
+#     MYSQL_ROOT_PASSWORD: "mmuser_password"
+#   healthcheck:
+#     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#     timeout: 20supdat
+#     retries: 10
+#   ports:
+#     # <Port exposed> : <MySQL Port running inside container>
+#     - "3306:3306"
+#   expose:
+#     # Opens port 3306 on the container
+#     - "3306"
+#     # Where our data will be persisted
+#   volumes:
+#     - ./volumes/db/mysql:/var/lib/mysql
+

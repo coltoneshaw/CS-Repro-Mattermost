@@ -1,0 +1,59 @@
+// File-based log sources
+loki.source.file "mattermost_logs" {
+  targets = [
+    { "__path__" = "/mattermost/logs/mattermost.log", "filename" = "/logs-node-1/mattermost.log", "job" = "mattermost" },
+  ]
+  forward_to = [loki.process.mm_logs_processor.receiver]
+}
+
+loki.source.file "mattermost_advanced_logs" {
+  targets = [
+    { "__path__" = "/mattermost/logs/advancedLogs.log", "filename" = "/logs-node-1/advancedLogs.log", "job" = "mattermost" },
+  ]
+  forward_to = [loki.process.mm_logs_processor.receiver]
+}
+
+loki.source.file "mattermost_ldap_logs" {
+  targets = [
+    { "__path__" = "/mattermost/logs/advancedLdapLogs.log", "filename" = "/logs-node-1/advancedLdapLogs.log", "job" = "mattermost" },
+  ]
+  forward_to = [loki.process.mm_logs_processor.receiver]
+}
+
+// Process Mattermost logs
+loki.process "mm_logs_processor" {
+  // First, try to parse as JSON
+  stage.json {
+    expressions = {
+      ts = "timestamp",
+      log_level = "level",
+      log_msg = "msg",
+      log_caller = "caller",
+    }
+  }
+
+  // Set labels based on extracted fields
+  stage.labels {
+    values = {
+      level = "log_level",
+    }
+  }
+
+  forward_to = [loki.write.loki.receiver]
+}
+
+// API endpoint for direct log pushing
+loki.source.api "push_api" {
+  http {
+    listen_address = "0.0.0.0"
+    listen_port = 9999
+  }
+  forward_to = [loki.write.loki.receiver]
+}
+
+// Send all logs to Loki
+loki.write "loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
